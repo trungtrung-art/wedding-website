@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { invitation } from "@/data/invitation";
 import { useT } from "@/lib/i18n-context";
 import { useScrollReveal } from "@/lib/use-scroll-reveal";
@@ -15,6 +16,13 @@ export function Rsvp() {
     <section ref={ref} className="relative mx-auto grid min-h-screen max-w-5xl place-items-center px-5 py-20">
       <div className="grid w-full max-w-4xl gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-center">
         <div className="text-left">
+          <Image
+            src={invitation.photos.portrait}
+            alt=""
+            width={400}
+            height={400}
+            className="mb-6 h-32 w-32 rounded-full object-cover ring-2 ring-bronze-500/40 ring-offset-4 ring-offset-cream-50"
+          />
           <p className="section-title text-7xl font-light uppercase leading-none text-burgundy-900 md:text-8xl">
             {t("rsvp.title")}
           </p>

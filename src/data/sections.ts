@@ -12,6 +12,7 @@ export type SectionKey =
   | "quote-three-things"
   | "countdown"
   | "sentiment-1"
+  | "gallery"
   | "poetry-2"
   | "date-details"
   | "calendar"
@@ -32,6 +33,7 @@ export const sectionOrder: SectionKey[] = [
   "quote-three-things",
   "countdown",
   "sentiment-1",
+  "gallery",
   "poetry-2",
   "date-details",
   "calendar",

@@ -9,6 +9,7 @@ import { GratitudeEn } from "./sections/gratitude-en";
 import { Poetry1 } from "./sections/poetry-1";
 import { QuoteThreeThings } from "./sections/quote-three-things";
 import { Sentiment1 } from "./sections/sentiment-1";
+import { Gallery } from "./sections/gallery";
 import { Poetry2 } from "./sections/poetry-2";
 import { DateDetails } from "./sections/date-details";
 import { Calendar } from "./sections/calendar";
@@ -41,6 +42,7 @@ export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
   "quote-three-things": QuoteThreeThings,
   "countdown": Countdown,
   "sentiment-1": Sentiment1,
+  "gallery": Gallery,
   "poetry-2": Poetry2,
   "date-details": DateDetails,
   "calendar": Calendar,

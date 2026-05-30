@@ -49,6 +49,9 @@ export const dict: Record<Locale, Dict> = {
 
     "sentiment1.body": "Em là điều đẹp đẽ nhất mà cuộc đời này đã trao cho anh. Cảm ơn vì em đã đến và đã ở lại.",
 
+    "gallery.title": "Những khoảnh khắc",
+    "gallery.subtitle": "Hành trình tình yêu của chúng mình",
+
     "poetry2.verse1.vi": "Đời người chỉ một lần yêu thật\nVà anh đã chọn em.",
     "poetry2.verse1.en": "We only truly love once in a lifetime\n— and I have chosen you.",
     "poetry2.verse2.vi": "Cảm ơn em đã đến\nĐể anh có một mái nhà.",
@@ -128,6 +131,9 @@ export const dict: Record<Locale, Dict> = {
     "countdown.seconds": "seconds",
 
     "sentiment1.body": "You are the most beautiful thing this life has ever given me. Thank you for arriving — and for staying.",
+
+    "gallery.title": "Our Moments",
+    "gallery.subtitle": "The journey of our love",
 
     "poetry2.verse1.vi": "Đời người chỉ một lần yêu thật\nVà anh đã chọn em.",
     "poetry2.verse1.en": "We only truly love once in a lifetime\n— and I have chosen you.",
