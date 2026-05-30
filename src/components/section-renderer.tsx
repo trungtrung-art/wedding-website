@@ -3,6 +3,7 @@ import { sectionOrder, type SectionKey } from "@/data/sections";
 import { Hero } from "./sections/hero";
 import { Countdown } from "./sections/countdown";
 import { Rsvp } from "./sections/rsvp";
+import { ThankYou } from "./sections/thank-you";
 
 const Placeholder = (label: string): ComponentType => () => (
   <section className="mx-auto grid min-h-[40vh] max-w-5xl place-items-center px-5 py-20 text-burgundy-900/40">
@@ -28,7 +29,7 @@ export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
   "venue": Placeholder("venue"),
   "rsvp": Rsvp,
   "guest-interaction": Placeholder("guest-interaction"),
-  "thank-you": Placeholder("thank-you"),
+  "thank-you": ThankYou,
 };
 
 export function SectionRenderer() {
