@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <!-- Wax body: radial gradient for natural domed appearance -->
+    <radialGradient id="wax-body" cx="40%" cy="35%" r="72%">
+      <stop offset="0%" stop-color="#a04040"/>
+      <stop offset="40%" stop-color="#7a2d2d"/>
+      <stop offset="80%" stop-color="#5a1f1f"/>
+      <stop offset="100%" stop-color="#3a1010"/>
+    </radialGradient>
+
+    <!-- Glossy specular highlight on top-left of the wax -->
+    <radialGradient id="wax-shine" cx="35%" cy="28%" r="38%">
+      <stop offset="0%" stop-color="#d48484" stop-opacity="0.7"/>
+      <stop offset="45%" stop-color="#d48484" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#d48484" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Organic edge displacement (real wax isn't a perfect circle) -->
+    <filter id="organic-edge" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="11"/>
+      <feDisplacementMap in="SourceGraphic" scale="7"/>
+    </filter>
+
+    <!-- Soft drop shadow under the wax disc on cream paper -->
+    <filter id="paper-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7"/>
+      <feOffset dx="0" dy="5"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- True inset shadow filter (uses inverted-alpha trick — standard SVG technique) -->
+    <filter id="inset" x="-25%" y="-25%" width="150%" height="150%">
+      <!-- Step 1: invert alpha (negative of letter shape) -->
+      <feComponentTransfer in="SourceAlpha" result="inv">
+        <feFuncA type="table" tableValues="1 0"/>
+      </feComponentTransfer>
+      <!-- Step 2: blur and offset DOWN-RIGHT for top-left dark shadow inside letter -->
+      <feGaussianBlur in="inv" stdDeviation="1.8" result="blur"/>
+      <feOffset in="blur" dx="2.5" dy="2.5" result="off"/>
+      <!-- Step 3: flood with deep burgundy shadow color -->
+      <feFlood flood-color="#1f0808" flood-opacity="1" result="color"/>
+      <feComposite in="color" in2="off" operator="in" result="shadow"/>
+      <!-- Step 4: clip to letter shape so shadow stays INSIDE the stroke -->
+      <feComposite in="shadow" in2="SourceAlpha" operator="in" result="insideShadow"/>
+      <!-- Step 5: stack on source -->
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="insideShadow"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Cream paper-tone backdrop NOT drawn (transparent SVG) so it floats on any background -->
+
+  <!-- Wax disc with organic edge + paper shadow -->
+  <g filter="url(#paper-shadow)">
+    <g filter="url(#organic-edge)">
+      <circle cx="200" cy="200" r="158" fill="url(#wax-body)"/>
+    </g>
+    <!-- Specular highlight stays on top, never displaced -->
+    <ellipse cx="158" cy="132" rx="100" ry="62" fill="url(#wax-shine)"/>
+  </g>
+
+  <!-- Debossed T & Q
+       Technique: stacked text layers (letterpress effect)
+       - Layer 1 (top-left offset, dark): the recess shadow facing the light
+       - Layer 2 (bottom-right offset, light): the rim of the recess catching light
+       - Layer 3 (centered, base): the "floor" of the impression — slightly darker burgundy
+       Result: text reads as the SAME burgundy wax, just sunk into the surface.
+  -->
+  <g font-family="'Cormorant Garamond', 'Playfair Display', Georgia, serif" font-style="italic" text-anchor="middle" dominant-baseline="central">
+
+    <!-- Top-left dark rim (inside-stroke shadow facing light source) -->
+    <g transform="translate(-1.6, -1.6)" opacity="0.85">
+      <text x="142" y="210" font-size="170" font-weight="500" fill="#240808">T</text>
+      <text x="200" y="192" font-size="92"  font-weight="400" fill="#240808">&amp;</text>
+      <text x="258" y="210" font-size="170" font-weight="500" fill="#240808">Q</text>
+    </g>
+
+    <!-- Bottom-right light rim (floor of the impression catching light) -->
+    <g transform="translate(1.6, 1.6)" opacity="0.55">
+      <text x="142" y="210" font-size="170" font-weight="500" fill="#c97070">T</text>
+      <text x="200" y="192" font-size="92"  font-weight="400" fill="#c97070">&amp;</text>
+      <text x="258" y="210" font-size="170" font-weight="500" fill="#c97070">Q</text>
+    </g>
+
+    <!-- Base layer: same color family as wax, with proper inset shadow filter -->
+    <g filter="url(#inset)" fill="#5a1f1f">
+      <text x="142" y="210" font-size="170" font-weight="500">T</text>
+      <text x="200" y="192" font-size="92"  font-weight="400">&amp;</text>
+      <text x="258" y="210" font-size="170" font-weight="500">Q</text>
+    </g>
+  </g>
+</svg>
