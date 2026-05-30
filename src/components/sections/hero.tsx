@@ -3,14 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { ChevronDown, Heart, Music2, Pause } from "lucide-react";
+import { ChevronDown, Heart } from "lucide-react";
 import { invitation } from "@/data/invitation";
 import { useT } from "@/lib/i18n-context";
+import { MusicToggle } from "@/components/music-toggle";
 
 export function Hero() {
   const t = useT();
   const [opened, setOpened] = useState(false);
-  const [musicPlaying, setMusicPlaying] = useState(false);
 
   const shellRef = useRef<HTMLButtonElement>(null);
   const flapRef = useRef<HTMLSpanElement>(null);
@@ -110,14 +110,7 @@ export function Hero() {
       </button>
 
       <div ref={hintRef} className="flex flex-col items-center gap-5">
-        <button
-          type="button"
-          aria-label={musicPlaying ? "Pause music" : "Play music"}
-          onClick={() => setMusicPlaying((v) => !v)}
-          className="grid h-12 w-12 place-items-center rounded-full border border-burgundy-900/30 bg-cream-50/70 text-burgundy-900 backdrop-blur transition hover:bg-cream-100"
-        >
-          {musicPlaying ? <Pause className="h-5 w-5" /> : <Music2 className="h-5 w-5" />}
-        </button>
+        <MusicToggle />
         <ChevronDown className="h-8 w-8 animate-bounce text-burgundy-900/60" strokeWidth={1.4} />
       </div>
     </section>
