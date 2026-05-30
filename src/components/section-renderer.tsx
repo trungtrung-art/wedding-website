@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { sectionOrder, type SectionKey } from "@/data/sections";
+import { Hero } from "./sections/hero";
 
 const Placeholder = (label: string): ComponentType => () => (
   <section className="mx-auto grid min-h-[40vh] max-w-5xl place-items-center px-5 py-20 text-burgundy-900/40">
@@ -8,7 +9,7 @@ const Placeholder = (label: string): ComponentType => () => (
 );
 
 export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
-  "hero": Placeholder("hero"),
+  "hero": Hero,
   "date-banner": Placeholder("date-banner"),
   "names": Placeholder("names"),
   "invitation-title": Placeholder("invitation-title"),
