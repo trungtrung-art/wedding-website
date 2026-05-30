@@ -13,15 +13,22 @@ import { Poetry2 } from "./sections/poetry-2";
 import { DateDetails } from "./sections/date-details";
 import { Calendar } from "./sections/calendar";
 import { ClosingSentiment } from "./sections/closing-sentiment";
+import { Venue } from "./sections/venue";
+import { GuestInteraction } from "./sections/guest-interaction";
 import { Countdown } from "./sections/countdown";
 import { Rsvp } from "./sections/rsvp";
 import { ThankYou } from "./sections/thank-you";
 
-const Placeholder = (label: string): ComponentType => () => (
-  <section className="mx-auto grid min-h-[40vh] max-w-5xl place-items-center px-5 py-20 text-burgundy-900/40">
-    <p className="text-xs uppercase tracking-[0.3em]">[ {label} ]</p>
-  </section>
-);
+const Placeholder = (label: string): ComponentType => {
+  // eslint-disable-next-line react/display-name
+  const C: ComponentType = () => (
+    <section className="mx-auto grid min-h-[40vh] max-w-5xl place-items-center px-5 py-20 text-burgundy-900/40">
+      <p className="text-xs uppercase tracking-[0.3em]">[ {label} ]</p>
+    </section>
+  );
+  C.displayName = `Placeholder(${label})`;
+  return C;
+};
 
 export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
   "hero": Hero,
@@ -38,9 +45,9 @@ export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
   "date-details": DateDetails,
   "calendar": Calendar,
   "closing-sentiment": ClosingSentiment,
-  "venue": Placeholder("venue"),
+  "venue": Venue,
   "rsvp": Rsvp,
-  "guest-interaction": Placeholder("guest-interaction"),
+  "guest-interaction": GuestInteraction,
   "thank-you": ThankYou,
 };
 
