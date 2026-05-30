@@ -15,12 +15,12 @@ export function Names() {
     <section ref={ref} className="relative mx-auto grid min-h-screen max-w-5xl place-items-center px-5 py-20">
       <div className="grid w-full gap-10 md:grid-cols-2">
         {([
-          { label: t("names.groomLabel"), name: invitation.couple.groom.name, parents: t("names.groomParents") },
-          { label: t("names.brideLabel"), name: invitation.couple.bride.name, parents: t("names.brideParents") },
+          { label: t("names.groomLabel"), name: invitation.couple.groom.name, parents: t("names.groomParents"), photo: invitation.photos.groomPortrait },
+          { label: t("names.brideLabel"), name: invitation.couple.bride.name, parents: t("names.brideParents"), photo: invitation.photos.bridePortrait },
         ]).map((person) => (
           <div key={person.label} data-reveal className="paper-panel px-8 py-12 text-center">
             <Image
-              src={invitation.photos.portrait}
+              src={person.photo}
               alt={person.name}
               width={400}
               height={400}

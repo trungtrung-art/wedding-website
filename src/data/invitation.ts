@@ -15,7 +15,13 @@ export type Invitation = {
     venue: { name: string; address: string; mapUrl: string };
   };
   rsvp: { deadline: string };
-  photos: { hero: string; portrait: string; gallery: string[] };
+  photos: {
+    hero: string;
+    portrait: string;
+    groomPortrait: string;
+    bridePortrait: string;
+    gallery: string[];
+  };
 };
 
 export const invitation: Invitation = {
@@ -35,13 +41,18 @@ export const invitation: Invitation = {
     },
   },
   rsvp: { deadline: "2027-05-01" },
+  // Placeholder SVGs ship with the repo so every image slot is visible during
+  // layout/design work. Swap each URL for a real photo when ready (the future
+  // CMS will fill these in per invitation).
   photos: {
-    hero: "/wedding-assets/photo-detail-2.png",
-    portrait: "/wedding-assets/photo-detail-1.png",
+    hero: "/wedding-assets/placeholder-hero.svg",
+    portrait: "/wedding-assets/placeholder-portrait.svg",
+    groomPortrait: "/wedding-assets/placeholder-groom.svg",
+    bridePortrait: "/wedding-assets/placeholder-bride.svg",
     gallery: [
-      "/wedding-assets/photo-card.png",
-      "/wedding-assets/photo-detail-1.png",
-      "/wedding-assets/photo-detail-2.png",
+      "/wedding-assets/placeholder-gallery-1.svg",
+      "/wedding-assets/placeholder-gallery-2.svg",
+      "/wedding-assets/placeholder-gallery-3.svg",
     ],
   },
 };
