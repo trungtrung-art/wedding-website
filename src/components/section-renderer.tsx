@@ -9,6 +9,10 @@ import { GratitudeEn } from "./sections/gratitude-en";
 import { Poetry1 } from "./sections/poetry-1";
 import { QuoteThreeThings } from "./sections/quote-three-things";
 import { Sentiment1 } from "./sections/sentiment-1";
+import { Poetry2 } from "./sections/poetry-2";
+import { DateDetails } from "./sections/date-details";
+import { Calendar } from "./sections/calendar";
+import { ClosingSentiment } from "./sections/closing-sentiment";
 import { Countdown } from "./sections/countdown";
 import { Rsvp } from "./sections/rsvp";
 import { ThankYou } from "./sections/thank-you";
@@ -30,10 +34,10 @@ export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
   "quote-three-things": QuoteThreeThings,
   "countdown": Countdown,
   "sentiment-1": Sentiment1,
-  "poetry-2": Placeholder("poetry-2"),
-  "date-details": Placeholder("date-details"),
-  "calendar": Placeholder("calendar"),
-  "closing-sentiment": Placeholder("closing-sentiment"),
+  "poetry-2": Poetry2,
+  "date-details": DateDetails,
+  "calendar": Calendar,
+  "closing-sentiment": ClosingSentiment,
   "venue": Placeholder("venue"),
   "rsvp": Rsvp,
   "guest-interaction": Placeholder("guest-interaction"),
