@@ -27,3 +27,6 @@ next-env.d.ts
 
 # Superpowers brainstorming artifacts
 .superpowers
+
+# ui-verify screenshot output (per-run, ephemeral)
+tmp

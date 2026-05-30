@@ -18,7 +18,6 @@ export function Hero() {
   const shellRef = useRef<HTMLButtonElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const closedRef = useRef<HTMLDivElement>(null);
-  const flapRef = useRef<HTMLSpanElement>(null);
   const sealRef = useRef<HTMLSpanElement>(null);
   const backRef = useRef<HTMLImageElement>(null);
   const sheet1Ref = useRef<HTMLDivElement>(null);
@@ -89,42 +88,41 @@ export function Hero() {
         scale: 0.55, rotate: 22, autoAlpha: 0,
         duration: 0.55, ease: "back.in(1.6)",
       }, "-=0.1")
-      // 3. Flap peels back (long, deliberate)
-      .to(flapRef.current, {
-        rotateX: -178, y: -3, duration: 1.05, ease: "power4.inOut",
-      }, "-=0.45")
+      // 3. Closed envelope graphic cross-fades out (the PNG includes its
+      //    own flap; we don't need a separate flap-peel animation now)
+      .to(closedRef.current, {
+        autoAlpha: 0, scale: 1.05, duration: 0.85, ease: "power2.inOut",
+      }, "-=0.35")
       // 4. Inner back wall fades in (envelope is now open)
-      .to(backRef.current, { autoAlpha: 1, duration: 0.5 }, "-=0.55")
-      // 5. Closed-envelope graphic fades out as opening reveals
-      .to(closedRef.current, { autoAlpha: 0, duration: 0.55 }, "-=0.45")
-      // 6. THREE photo sheets fan out from inside the envelope
+      .to(backRef.current, { autoAlpha: 1, duration: 0.5 }, "-=0.6")
+      // 5. THREE photo sheets fan out from inside the envelope
       .to(sheet1Ref.current, {
         autoAlpha: 1, y: -38, x: -42, rotate: -9, scale: 1, duration: 0.95,
-      }, "-=0.3")
+      }, "-=0.4")
       .to(sheet3Ref.current, {
         autoAlpha: 1, y: -38, x: 42, rotate: 9, scale: 1, duration: 0.95,
       }, "<")
       .to(sheet2Ref.current, {
         autoAlpha: 1, y: -56, scale: 1, duration: 0.95,
       }, "<+0.08")
-      // 7. Main SAVE THE DATE card slides up on top
+      // 6. Main SAVE THE DATE card slides up on top
       .to(cardRef.current, {
         autoAlpha: 1, y: -78, rotate: 0, duration: 1.1, ease: "power3.out",
       }, "<+0.2")
-      // 8. Floral sprigs glide in from corners
+      // 7. Floral sprigs glide in from corners
       .to([leftSprigRef.current, rightSprigRef.current], {
         autoAlpha: 1, x: 0, y: 0, rotate: 0, stagger: 0.12, duration: 0.85,
       }, "-=0.7")
-      // 9. Intro names lift slightly to make room
-      .to(introRef.current, { y: -28, duration: 0.6 }, "-=0.55")
-      // 10. Scroll hint reveals at bottom
-      .to(hintRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.2");
+      // 8. (Intro names stay put — moving them clips them at the top
+      //     of the viewport in tighter window sizes.)
+      // 9. Scroll hint reveals at bottom
+      .to(hintRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.5");
   };
 
   return (
     <section
       ref={sectionRef}
-      className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-between gap-10 px-5 py-10 text-center"
+      className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-between gap-6 px-5 py-6 text-center md:py-10"
     >
       {/* Intro: couple names */}
       <div ref={introRef} className="space-y-5">
@@ -150,7 +148,7 @@ export function Hero() {
         aria-expanded={opened}
         onClick={open}
         className="group relative grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
-        style={{ width: "clamp(260px, 38vw, 400px)", aspectRatio: "3/4" }}
+        style={{ width: "clamp(220px, 28vw, 320px)", aspectRatio: "3/4" }}
       >
         {/* Inner-back wall of envelope (revealed when opened) */}
         <Image
@@ -160,12 +158,14 @@ export function Hero() {
           width={694}
           height={799}
           className="pointer-events-none absolute inset-0 z-10 h-full w-full select-none object-contain"
+          style={{ opacity: 0 }}
           aria-hidden
         />
 
         {/* Left photo sheet (gallery[0]) — fans out to the left */}
         <div
           ref={sheet1Ref}
+          style={{ opacity: 0 }}
           className="paper-panel pointer-events-none absolute left-[6%] top-[18%] z-30 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
@@ -180,6 +180,7 @@ export function Hero() {
         {/* Right photo sheet (gallery[2]) — fans out to the right */}
         <div
           ref={sheet3Ref}
+          style={{ opacity: 0 }}
           className="paper-panel pointer-events-none absolute right-[6%] top-[18%] z-30 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
@@ -194,6 +195,7 @@ export function Hero() {
         {/* Center photo sheet (gallery[1]) — peeks slightly higher than the two side sheets */}
         <div
           ref={sheet2Ref}
+          style={{ opacity: 0 }}
           className="paper-panel pointer-events-none absolute left-1/2 top-[13%] z-40 aspect-square w-[50%] -translate-x-1/2 origin-bottom overflow-hidden p-1.5"
         >
           <Image
@@ -208,6 +210,7 @@ export function Hero() {
         {/* Main SAVE THE DATE card — top layer */}
         <div
           ref={cardRef}
+          style={{ opacity: 0 }}
           className="paper-panel pointer-events-none absolute left-1/2 top-[16%] z-50 flex aspect-[3/4] w-[60%] -translate-x-1/2 flex-col items-center justify-center bg-cream-50 px-3 py-4"
         >
           <span className="text-[0.55rem] uppercase tracking-[0.42em] text-burgundy-900/60">
@@ -233,33 +236,31 @@ export function Hero() {
           </span>
         </div>
 
-        {/* Closed-envelope graphic — the front face you see before clicking */}
+        {/* Closed-envelope graphic — the front face you see before clicking.
+            Uses layer-envelope-front.png because closed-envelope.png is a
+            blank/scribble file (the only real envelope graphic in the
+            asset set is the "front" layer). */}
         <div
           ref={closedRef}
           className="pointer-events-none absolute inset-0 z-20 grid place-items-center"
         >
           <Image
-            src="/wedding-assets/closed-envelope.png"
+            src="/wedding-assets/layer-envelope-front.png"
             alt=""
-            width={800}
-            height={1100}
+            width={1122}
+            height={1402}
             priority
             className="h-full w-full object-contain drop-shadow-[0_18px_36px_rgba(45,34,24,0.32)]"
           />
         </div>
 
-        {/* Flap — animates open. Stays on top of closed graphic until click. */}
-        <span
-          ref={flapRef}
-          className="envelope-flap z-30"
-          aria-hidden
-        />
-
-        {/* Wax seal — sits on top of flap edge */}
+        {/* Our burgundy T&Q wax seal — overlays the gold seal painted into
+            the PNG (centered horizontally; ~58% from top is where the V flap
+            meets the body, matching the PNG's existing seal position). */}
         <span
           ref={sealRef}
-          className="pointer-events-none absolute z-40 h-20 w-20 md:h-24 md:w-24"
-          style={{ top: "32%", left: "50%", transform: "translate(-50%, -50%)" }}
+          className="pointer-events-none absolute z-40 h-28 w-28 md:h-32 md:w-32"
+          style={{ top: "62%", left: "50%", transform: "translate(-50%, -50%)" }}
           aria-hidden
         >
           <Image
@@ -274,6 +275,7 @@ export function Hero() {
         {/* Floral sprigs */}
         <span
           ref={leftSprigRef}
+          style={{ opacity: 0 }}
           className="pointer-events-none absolute -left-6 bottom-[28%] z-50 h-16 w-16 text-bronze-500/85"
           aria-hidden
         >
@@ -285,6 +287,7 @@ export function Hero() {
         </span>
         <span
           ref={rightSprigRef}
+          style={{ opacity: 0 }}
           className="pointer-events-none absolute -right-6 bottom-[28%] z-50 h-16 w-16 text-bronze-500/85"
           aria-hidden
         >
@@ -302,7 +305,7 @@ export function Hero() {
       </button>
 
       {/* Music toggle + scroll hint */}
-      <div ref={hintRef} className="flex flex-col items-center gap-5">
+      <div ref={hintRef} style={{ opacity: 0 }} className="flex flex-col items-center gap-5">
         <MusicToggle />
         <ChevronDown
           className="h-8 w-8 animate-bounce text-burgundy-900/60"
