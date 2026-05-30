@@ -1,6 +1,10 @@
 import type { ComponentType } from "react";
 import { sectionOrder, type SectionKey } from "@/data/sections";
 import { Hero } from "./sections/hero";
+import { DateBanner } from "./sections/date-banner";
+import { Names } from "./sections/names";
+import { InvitationTitle } from "./sections/invitation-title";
+import { WelcomeMessage } from "./sections/welcome-message";
 import { Countdown } from "./sections/countdown";
 import { Rsvp } from "./sections/rsvp";
 import { ThankYou } from "./sections/thank-you";
@@ -13,10 +17,10 @@ const Placeholder = (label: string): ComponentType => () => (
 
 export const SECTION_REGISTRY: Record<SectionKey, ComponentType> = {
   "hero": Hero,
-  "date-banner": Placeholder("date-banner"),
-  "names": Placeholder("names"),
-  "invitation-title": Placeholder("invitation-title"),
-  "welcome-message": Placeholder("welcome-message"),
+  "date-banner": DateBanner,
+  "names": Names,
+  "invitation-title": InvitationTitle,
+  "welcome-message": WelcomeMessage,
   "gratitude-en": Placeholder("gratitude-en"),
   "poetry-1": Placeholder("poetry-1"),
   "quote-three-things": Placeholder("quote-three-things"),
