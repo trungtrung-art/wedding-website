@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { Cormorant_Garamond, Inter, Playfair_Display } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n-context";
 import type { Locale } from "@/data/i18n";
+import { GsapRegister } from "@/components/gsap-register";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -37,7 +38,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={`${cormorant.variable} ${playfair.variable} ${inter.variable}`}>
       <body className="font-sans">
-        <LanguageProvider initial={locale}>{children}</LanguageProvider>
+        <LanguageProvider initial={locale}>
+          <GsapRegister />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
