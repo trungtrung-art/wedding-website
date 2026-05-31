@@ -345,7 +345,7 @@ export function Hero() {
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-1/2 top-[16%] z-50 flex aspect-[3/4] w-[60%] -translate-x-1/2 flex-col items-center justify-center bg-cream-50 px-4 py-5"
+          className="paper-panel pointer-events-none absolute left-1/2 top-[16%] z-50 flex aspect-[3/4] w-[60%] -translate-x-1/2 flex-col items-center justify-start bg-cream-50 px-4 pb-5 pt-8"
         >
           <span className="text-[0.7rem] uppercase tracking-[0.42em] text-burgundy-900/60">
             {invitation.couple.initials}
@@ -356,18 +356,7 @@ export function Hero() {
           <span className="mt-1 font-serif text-3xl font-light uppercase leading-none text-burgundy-900 md:text-4xl">
             {t("hero.saveTheDateLine2")}
           </span>
-          <div className="mt-3 h-[42%] w-full overflow-hidden">
-            <Image
-              src={invitation.photos.hero}
-              alt=""
-              width={800}
-              height={800}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <span className="mt-3 text-[0.7rem] uppercase tracking-[0.28em] text-burgundy-900/70">
-            {invitation.ceremony.solarDate}
-          </span>
+          
         </div>
 
         {/* Envelope pocket — 4 stable pieces as flat SVG (body + L/R
