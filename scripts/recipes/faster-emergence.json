@@ -1,0 +1,21 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "viewport": { "width": 1440, "height": 900 },
+  "states": [
+    {
+      "name": "01-after-click-1s",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 1000 }]
+    },
+    {
+      "name": "02-after-click-2s",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 2000 }]
+    },
+    {
+      "name": "03-fully-open",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 3500 }]
+    }
+  ]
+}

@@ -207,50 +207,48 @@ export function Hero() {
 
     tl
       // 1. Envelope rises slightly — anticipation (no scale change on click)
-      .to(shellRef.current, { y: -14, duration: 0.5 })
+      .to(shellRef.current, { y: -14, duration: 0.3 })
       // 2. Wax seal "breaks"
       .to(sealRef.current, {
         scale: 0.55, rotate: 22, autoAlpha: 0,
-        duration: 0.55, ease: "back.in(1.6)",
-      }, "-=0.1")
+        duration: 0.4, ease: "back.in(1.6)",
+      }, "-=0.08")
       // 3. Top triangle flap hinges back in real 3D space
       .to(topFlapRef.current, {
-        rotateX: -158, duration: 1.0, ease: "power3.inOut",
-      }, "-=0.35")
+        rotateX: -158, duration: 0.65, ease: "power3.inOut",
+      }, "-=0.25")
 
-      // 4. SAVE THE DATE card emerges FIRST from inside the envelope —
-      //    rises 220+160=~380px up, lands with a casual 6° clockwise tilt
+      // 4. SAVE THE DATE card emerges FIRST from inside the envelope
       .to(cardRef.current, {
         autoAlpha: 1, y: -160, rotate: 6,
-        duration: 0.9, ease: "power2.out",
-      }, "-=0.4")
+        duration: 0.55, ease: "power2.out",
+      }, "-=0.3")
 
-      // 5. After the card settles, photo 1 (LEFT) emerges from the pocket
-      //    and lands at a casual angle, slid left
+      // 5. After the card settles, photo 1 (LEFT) emerges
       .to(sheet1Ref.current, {
         autoAlpha: 1, y: -40, x: -60, rotate: -14, scale: 1,
-        duration: 0.7, ease: "power2.out",
-      }, "+=0.15")
+        duration: 0.4, ease: "power2.out",
+      }, "+=0.05")
 
-      // 6. Then photo 2 (CENTER) emerges, lands slightly tilted right
+      // 6. Then photo 2 (CENTER) emerges
       .to(sheet2Ref.current, {
         autoAlpha: 1, y: -55, x: 8, rotate: 5, scale: 1,
-        duration: 0.7, ease: "power2.out",
-      }, "+=0.25")
+        duration: 0.4, ease: "power2.out",
+      }, "+=0.1")
 
-      // 7. Then photo 3 (RIGHT) emerges, slid right with a bigger tilt
+      // 7. Then photo 3 (RIGHT) emerges
       .to(sheet3Ref.current, {
         autoAlpha: 1, y: -40, x: 60, rotate: 16, scale: 1,
-        duration: 0.7, ease: "power2.out",
-      }, "+=0.25")
+        duration: 0.4, ease: "power2.out",
+      }, "+=0.1")
 
       // 8. Floral sprigs glide in from corners
       .to([leftSprigRef.current, rightSprigRef.current], {
-        autoAlpha: 1, x: 0, y: 0, rotate: 0, stagger: 0.12, duration: 0.6,
-      }, "+=0.1")
+        autoAlpha: 1, x: 0, y: 0, rotate: 0, stagger: 0.08, duration: 0.4,
+      }, "+=0.05")
 
       // 9. Scroll hint reveals at bottom
-      .to(hintRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.2");
+      .to(hintRef.current, { autoAlpha: 1, y: 0, duration: 0.35 }, "-=0.2");
   };
 
   return (
