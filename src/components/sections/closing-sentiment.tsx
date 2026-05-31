@@ -14,7 +14,7 @@ export function ClosingSentiment() {
   useParallax(bgRef, 0.3);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-cream-100 py-32 text-center">
+    <section ref={sectionRef} className="relative grid place-items-center overflow-hidden bg-cream-100 py-32 text-center">
       <div
         ref={bgRef}
         className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-30"

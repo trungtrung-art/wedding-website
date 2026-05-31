@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "viewport": { "width": 1440, "height": 900 },
+  "states": [
+    { "name": "01-hero",              "url": "/", "actions": [{ "wait": 600 }] },
+    { "name": "02-snap-to-section-2", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 900 }, { "wait": 900 }] },
+    { "name": "03-snap-to-section-3", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 1800 }, { "wait": 900 }] },
+    { "name": "04-snap-to-section-5", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 3600 }, { "wait": 900 }] },
+    { "name": "05-snap-to-section-9", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 7200 }, { "wait": 900 }] }
+  ]
+}

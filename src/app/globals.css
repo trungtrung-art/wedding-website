@@ -15,6 +15,23 @@ html, body {
   color: var(--color-text);
 }
 
+/* Full-page snap scroll — each section is one viewport tall and snaps
+   to the top when the user scrolls. Modeled on fullPage.js behaviour
+   but uses native CSS scroll-snap, so it costs nothing, doesn't break
+   existing ScrollTrigger animations, and still works with keyboard /
+   PageUp/PageDown. scroll-snap-stop: always prevents fast-scrolling
+   past a section. */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+main.wedding-canvas > section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+}
+
 .wedding-canvas {
   background:
     radial-gradient(ellipse at 20% 10%, rgba(181, 133, 82, 0.08), transparent 50%),

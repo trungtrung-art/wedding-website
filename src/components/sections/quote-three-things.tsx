@@ -13,7 +13,7 @@ export function QuoteThreeThings() {
   useParallax(bgRef, 0.4);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-burgundy-900 py-32 text-center text-cream-50">
+    <section ref={sectionRef} className="relative grid place-items-center overflow-hidden bg-burgundy-900 py-32 text-center text-cream-50">
       <div
         ref={bgRef}
         className="pointer-events-none absolute inset-0"
