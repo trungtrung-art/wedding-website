@@ -30,13 +30,11 @@ function EnvelopeSvg({
   leftFlapRef,
   rightFlapRef,
   bottomFlapRef,
-  topFlapRef,
 }: {
   bodyRef: RefObject<SVGRectElement | null>;
   leftFlapRef: RefObject<SVGPolygonElement | null>;
   rightFlapRef: RefObject<SVGPolygonElement | null>;
   bottomFlapRef: RefObject<SVGPolygonElement | null>;
-  topFlapRef: RefObject<SVGPolygonElement | null>;
 }) {
   return (
     <svg
@@ -117,18 +115,9 @@ function EnvelopeSvg({
           strokeOpacity="0.55"
         />
 
-        {/* 5. Top triangle flap (closing flap; point just past center so it
-              visibly sits on TOP of the meeting point — that's where the
-              seal goes). Will animate up/back when envelope opens. */}
-        <polygon
-          ref={topFlapRef}
-          points="0,0 300,0 150,212"
-          fill="url(#env-paper-cool)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.55"
-          style={{ transformOrigin: "150px 0px", transformBox: "fill-box" }}
-        />
+        {/* Top triangle flap is rendered OUTSIDE this SVG as an HTML div
+            (clip-path triangle) so CSS 3D transforms can hinge it in real
+            perspective space. See the topFlap div in the Hero JSX below. */}
       </g>
     </svg>
   );
@@ -142,15 +131,13 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLButtonElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
-  const closedRef = useRef<HTMLDivElement>(null);
-  const sealRef = useRef<HTMLSpanElement>(null);
-  const backRef = useRef<HTMLImageElement>(null);
-  // 5 pieces of the closed-state SVG envelope (for future per-piece animation)
+  // Envelope: 4 stable pieces stay put as the "pocket", top flap hinges in 3D
   const envBodyRef = useRef<SVGRectElement>(null);
   const envLeftFlapRef = useRef<SVGPolygonElement>(null);
   const envRightFlapRef = useRef<SVGPolygonElement>(null);
   const envBottomFlapRef = useRef<SVGPolygonElement>(null);
-  const envTopFlapRef = useRef<SVGPolygonElement>(null);
+  const topFlapRef = useRef<HTMLDivElement>(null);
+  const sealRef = useRef<HTMLSpanElement>(null);
   const sheet1Ref = useRef<HTMLDivElement>(null);
   const sheet2Ref = useRef<HTMLDivElement>(null);
   const sheet3Ref = useRef<HTMLDivElement>(null);
@@ -164,21 +151,22 @@ export function Hero() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduce) {
-      gsap.set([backRef.current, sheet1Ref.current, sheet2Ref.current, sheet3Ref.current, cardRef.current, leftSprigRef.current, rightSprigRef.current, hintRef.current], {
+      gsap.set([sheet1Ref.current, sheet2Ref.current, sheet3Ref.current, cardRef.current, leftSprigRef.current, rightSprigRef.current, hintRef.current], {
         autoAlpha: 1, x: 0, y: 0, rotate: 0,
       });
-      gsap.set([closedRef.current, sealRef.current], { autoAlpha: 0 });
+      gsap.set([sealRef.current], { autoAlpha: 0 });
+      gsap.set(topFlapRef.current, { rotateX: -158 });
       setOpened(true);
       return;
     }
 
-    gsap.set(backRef.current, { autoAlpha: 0 });
     gsap.set([sheet1Ref.current, sheet3Ref.current], { autoAlpha: 0, y: 60, scale: 0.95 });
     gsap.set(sheet2Ref.current, { autoAlpha: 0, y: 80, scale: 0.95 });
     gsap.set(cardRef.current, { autoAlpha: 0, y: 100, rotate: -3 });
     gsap.set(leftSprigRef.current, { autoAlpha: 0, x: 50, y: 30, rotate: -28 });
     gsap.set(rightSprigRef.current, { autoAlpha: 0, x: -50, y: 30, rotate: 28 });
     gsap.set(hintRef.current, { autoAlpha: 0, y: 18 });
+    gsap.set(topFlapRef.current, { rotateX: 0 });
   }, []);
 
   // Scroll-driven fade on the envelope as you leave the hero
@@ -219,14 +207,14 @@ export function Hero() {
         scale: 0.55, rotate: 22, autoAlpha: 0,
         duration: 0.55, ease: "back.in(1.6)",
       }, "-=0.1")
-      // 3. Closed envelope graphic cross-fades out (the PNG includes its
-      //    own flap; we don't need a separate flap-peel animation now)
-      .to(closedRef.current, {
-        autoAlpha: 0, scale: 1.05, duration: 0.85, ease: "power2.inOut",
-      }, "-=0.35")
-      // 4. Inner back wall fades in (envelope is now open)
-      .to(backRef.current, { autoAlpha: 1, duration: 0.5 }, "-=0.6")
-      // 5. THREE photo sheets fan out from inside the envelope
+      // 3. Top triangle flap HINGES back in real 3D space (CSS perspective +
+      //    transformStyle: preserve-3d on the button parent). The 4 stable
+      //    pieces (body + L/R triangles + bottom trapezoid) stay put as
+      //    the visible envelope pocket.
+      .to(topFlapRef.current, {
+        rotateX: -158, duration: 1.2, ease: "power3.inOut",
+      }, "-=0.4")
+      // 4. THREE photo sheets fan out from inside the envelope
       .to(sheet1Ref.current, {
         autoAlpha: 1, y: -38, x: -42, rotate: -9, scale: 1, duration: 0.95,
       }, "-=0.4")
@@ -279,19 +267,14 @@ export function Hero() {
         aria-expanded={opened}
         onClick={open}
         className="group relative grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
-        style={{ width: "clamp(220px, 28vw, 320px)", aspectRatio: "3/4" }}
+        style={{
+          width: "clamp(220px, 28vw, 320px)",
+          aspectRatio: "3/4",
+          perspective: "1500px",
+          perspectiveOrigin: "center top",
+          transformStyle: "preserve-3d",
+        }}
       >
-        {/* Inner-back wall of envelope (revealed when opened) */}
-        <Image
-          ref={backRef}
-          src="/wedding-assets/layer-envelope-back.png"
-          alt=""
-          width={694}
-          height={799}
-          className="pointer-events-none absolute inset-0 z-10 h-full w-full select-none object-contain"
-          style={{ opacity: 0 }}
-          aria-hidden
-        />
 
         {/* Left photo sheet (gallery[0]) — fans out to the left */}
         <div
@@ -367,22 +350,34 @@ export function Hero() {
           </span>
         </div>
 
-        {/* Closed-envelope — 5 SVG pieces (body rectangle + left triangle +
-            right triangle + bottom trapezoid + top triangle). Each piece
-            has its own ref so future iterations can animate them
-            independently (e.g. top flap rotating open). */}
-        <div
-          ref={closedRef}
-          className="pointer-events-none absolute inset-0 z-20"
-        >
+        {/* Envelope pocket — 4 stable pieces as flat SVG (body + L/R
+            triangles + bottom trapezoid). These never move; they form
+            the visible envelope from which the card emerges. */}
+        <div className="pointer-events-none absolute inset-0 z-20">
           <EnvelopeSvg
             bodyRef={envBodyRef}
             leftFlapRef={envLeftFlapRef}
             rightFlapRef={envRightFlapRef}
             bottomFlapRef={envBottomFlapRef}
-            topFlapRef={envTopFlapRef}
           />
         </div>
+
+        {/* Top triangle FLAP — separate HTML div with clip-path so CSS 3D
+            transforms can hinge it back around its top edge. Point at
+            50%/53% matches the SVG meeting point (150, 212) of 300x400. */}
+        <div
+          ref={topFlapRef}
+          className="pointer-events-none absolute inset-0 z-30"
+          style={{
+            background: "linear-gradient(to bottom, #fefcf6, #f4e7d0)",
+            clipPath: "polygon(0% 0%, 100% 0%, 50% 53%)",
+            transformOrigin: "top center",
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "visible",
+            boxShadow: "inset 0 -8px 18px -10px rgba(45,34,24,0.18)",
+          }}
+          aria-hidden
+        />
 
         {/* Our burgundy T&Q wax seal — overlays the gold seal painted into
             the PNG (centered horizontally; ~58% from top is where the V flap
