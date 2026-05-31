@@ -20,9 +20,11 @@ import { MusicToggle } from "@/components/music-toggle";
  *   5. Top triangle — closing flap (point reaches just past center); will
  *      animate up/back when the envelope opens.
  *
- * ViewBox 300×400 matches the parent button's 3:4 aspect ratio exactly so
- * the SVG fills the container with no letterboxing. The 4 flaps meet at
- * point (150, 200) which is 50%/50% of the container — that's where the
+ * ViewBox 400×300 matches the parent button's 4:3 LANDSCAPE aspect ratio
+ * (wider than tall, like a real wedding invitation envelope — C5/C6/DL
+ * formats are all landscape). The closed envelope reads as a perfect
+ * rectangle with no rounded corners. The 4 flaps meet at point
+ * (200, 150) which is 50%/50% of the container — that's where the
  * T&Q wax seal sits.
  */
 function EnvelopeSvg({
@@ -38,7 +40,7 @@ function EnvelopeSvg({
 }) {
   return (
     <svg
-      viewBox="0 0 300 400"
+      viewBox="0 0 400 300"
       xmlns="http://www.w3.org/2000/svg"
       className="h-full w-full"
       preserveAspectRatio="xMidYMid meet"
@@ -71,14 +73,14 @@ function EnvelopeSvg({
       </defs>
 
       <g filter="url(#env-shadow)">
-        {/* 1. Body rectangle — full silhouette, base layer */}
+        {/* 1. Body rectangle — full silhouette, base layer.
+              No rx → sharp corners → reads as a perfect rectangle. */}
         <rect
           ref={bodyRef}
           x="0"
           y="0"
-          width="300"
-          height="400"
-          rx="3"
+          width="400"
+          height="300"
           fill="url(#env-paper)"
           stroke="#b58552"
           strokeWidth="0.8"
@@ -88,7 +90,7 @@ function EnvelopeSvg({
         {/* 2. Left triangle flap (folded inward; point at center-left) */}
         <polygon
           ref={leftFlapRef}
-          points="0,0 0,400 92,200"
+          points="0,0 0,300 130,150"
           fill="url(#env-paper)"
           stroke="#b58552"
           strokeWidth="0.6"
@@ -98,7 +100,7 @@ function EnvelopeSvg({
         {/* 3. Right triangle flap (mirror) */}
         <polygon
           ref={rightFlapRef}
-          points="300,0 300,400 208,200"
+          points="400,0 400,300 270,150"
           fill="url(#env-paper)"
           stroke="#b58552"
           strokeWidth="0.6"
@@ -108,7 +110,7 @@ function EnvelopeSvg({
         {/* 4. Bottom trapezoid (folded up; parallel top/bottom edges) */}
         <polygon
           ref={bottomFlapRef}
-          points="92,200 208,200 300,400 0,400"
+          points="130,150 270,150 400,300 0,300"
           fill="url(#env-paper-warm)"
           stroke="#b58552"
           strokeWidth="0.6"
@@ -268,8 +270,8 @@ export function Hero() {
         onClick={open}
         className="group relative grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
         style={{
-          width: "clamp(220px, 28vw, 320px)",
-          aspectRatio: "3/4",
+          width: "clamp(320px, 42vw, 480px)",
+          aspectRatio: "4/3",
           perspective: "1500px",
           perspectiveOrigin: "center top",
           transformStyle: "preserve-3d",
@@ -364,13 +366,13 @@ export function Hero() {
 
         {/* Top triangle FLAP — separate HTML div with clip-path so CSS 3D
             transforms can hinge it back around its top edge. Point at
-            50%/53% matches the SVG meeting point (150, 212) of 300x400. */}
+            50%/50% matches the SVG meeting point (200, 150) of 400×300. */}
         <div
           ref={topFlapRef}
           className="pointer-events-none absolute inset-0 z-30"
           style={{
             background: "linear-gradient(to bottom, #fefcf6, #f4e7d0)",
-            clipPath: "polygon(0% 0%, 100% 0%, 50% 53%)",
+            clipPath: "polygon(0% 0%, 100% 0%, 50% 50%)",
             transformOrigin: "top center",
             transformStyle: "preserve-3d",
             backfaceVisibility: "visible",
