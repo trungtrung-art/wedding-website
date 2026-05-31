@@ -223,16 +223,17 @@ export function Hero() {
         duration: 0.4, ease: "power2.out",
       }, "-=0.25")
 
-      // 5. Photo 1 (LEFT) — pulled slightly toward center (x: +8) so it
-      //    overlaps with photo 2 like a stack of cards
+      // 5. Photo 1 (LEFT) settles at its static position (no x shift —
+      //    static positions already create the 30% overlap with photo 2)
       .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -40, x: 8, rotate: -10, scale: 1,
+        autoAlpha: 1, y: -40, x: 0, rotate: -8, scale: 1,
         duration: 0.32, ease: "power2.out",
       }, "-=0.05")
 
-      // 6. Photo 2 (RIGHT) — pulled slightly toward center (x: -8)
+      // 6. Photo 2 (RIGHT) settles ON TOP of photo 1 — its left edge sits
+      //    well into photo 1's territory for a ~30% overlap
       .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -40, x: -8, rotate: 10, scale: 1,
+        autoAlpha: 1, y: -40, x: 0, rotate: 8, scale: 1,
         duration: 0.32, ease: "power2.out",
       }, "-=0.2")
 
@@ -301,17 +302,17 @@ export function Hero() {
         }}
       >
 
-        {/* Two LARGER portrait photos overlapping slightly at the envelope
-            center. Inner edges already overlap (left/right-[8%] + w-[42%]
-            → sheet1 spans 8-50%, sheet2 spans 50-92% so they meet at 50%),
-            and the animation pulls each toward center by +/-8px so they
-            visually overlap like stacked cards. */}
+        {/* Two LARGER portrait photos with photo 2 (RIGHT) overlapping
+            photo 1 (LEFT) by ~30% of photo width.
+              sheet1 (left-[5%], w-[46%])  → spans  5 – 51%  from left
+              sheet2 (right-[18%], w-[46%]) → spans 36 – 82%  from left
+              overlap = 36–51% = 15% of envelope = 15/46 ≈ 33% of photo */}
 
         {/* Photo 1 — LEFT, gallery[0] */}
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[8%] top-[18%] z-40 aspect-[3/4] w-[42%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[5%] top-[18%] z-40 aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
@@ -322,12 +323,12 @@ export function Hero() {
           />
         </div>
 
-        {/* Photo 2 — RIGHT, gallery[1] — z-[42] so it sits in FRONT of
-            sheet1 where they overlap (creates a clear stacking depth) */}
+        {/* Photo 2 — RIGHT, gallery[1] — z-[42] so it sits ON TOP of
+            sheet1 in the ~30% overlap zone */}
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[8%] top-[18%] z-[42] aspect-[3/4] w-[42%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[18%] top-[18%] z-[42] aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
