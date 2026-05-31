@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +8,131 @@ import { ChevronDown, Leaf } from "lucide-react";
 import { invitation } from "@/data/invitation";
 import { useT } from "@/lib/i18n-context";
 import { MusicToggle } from "@/components/music-toggle";
+
+/**
+ * EnvelopeSvg — closed-state envelope built from 5 distinct paper pieces.
+ *
+ * Layering (back → front in SVG paint order):
+ *   1. Body rectangle — the full envelope silhouette / paper backing
+ *   2. Left triangle  — flap folded inward from the left edge
+ *   3. Right triangle — mirror of left
+ *   4. Bottom trapezoid — flap folded UP from the bottom edge
+ *   5. Top triangle — closing flap (point reaches just past center); will
+ *      animate up/back when the envelope opens.
+ *
+ * ViewBox 300×400 matches the parent button's 3:4 aspect ratio exactly so
+ * the SVG fills the container with no letterboxing. The 4 flaps meet at
+ * point (150, 200) which is 50%/50% of the container — that's where the
+ * T&Q wax seal sits.
+ */
+function EnvelopeSvg({
+  bodyRef,
+  leftFlapRef,
+  rightFlapRef,
+  bottomFlapRef,
+  topFlapRef,
+}: {
+  bodyRef: RefObject<SVGRectElement | null>;
+  leftFlapRef: RefObject<SVGPolygonElement | null>;
+  rightFlapRef: RefObject<SVGPolygonElement | null>;
+  bottomFlapRef: RefObject<SVGPolygonElement | null>;
+  topFlapRef: RefObject<SVGPolygonElement | null>;
+}) {
+  return (
+    <svg
+      viewBox="0 0 300 400"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden
+    >
+      <defs>
+        {/* Cream paper gradient — subtle top-to-bottom for natural depth */}
+        <linearGradient id="env-paper" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#fdfaf3" />
+          <stop offset="100%" stopColor="#efe2cd" />
+        </linearGradient>
+
+        {/* Slightly warmer cream for the bottom trapezoid so it reads as a
+            separate piece behind the others */}
+        <linearGradient id="env-paper-warm" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f6e9d4" />
+          <stop offset="100%" stopColor="#e8d9bf" />
+        </linearGradient>
+
+        {/* Slightly cooler cream for the top flap so its fold edge is visible */}
+        <linearGradient id="env-paper-cool" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#fefcf6" />
+          <stop offset="100%" stopColor="#f4e7d0" />
+        </linearGradient>
+
+        {/* Soft drop shadow under the whole envelope */}
+        <filter id="env-shadow" x="-10%" y="-5%" width="120%" height="115%">
+          <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#2d2218" floodOpacity="0.22" />
+        </filter>
+      </defs>
+
+      <g filter="url(#env-shadow)">
+        {/* 1. Body rectangle — full silhouette, base layer */}
+        <rect
+          ref={bodyRef}
+          x="0"
+          y="0"
+          width="300"
+          height="400"
+          rx="3"
+          fill="url(#env-paper)"
+          stroke="#b58552"
+          strokeWidth="0.8"
+          strokeOpacity="0.45"
+        />
+
+        {/* 2. Left triangle flap (folded inward; point at center-left) */}
+        <polygon
+          ref={leftFlapRef}
+          points="0,0 0,400 92,200"
+          fill="url(#env-paper)"
+          stroke="#b58552"
+          strokeWidth="0.6"
+          strokeOpacity="0.5"
+        />
+
+        {/* 3. Right triangle flap (mirror) */}
+        <polygon
+          ref={rightFlapRef}
+          points="300,0 300,400 208,200"
+          fill="url(#env-paper)"
+          stroke="#b58552"
+          strokeWidth="0.6"
+          strokeOpacity="0.5"
+        />
+
+        {/* 4. Bottom trapezoid (folded up; parallel top/bottom edges) */}
+        <polygon
+          ref={bottomFlapRef}
+          points="92,200 208,200 300,400 0,400"
+          fill="url(#env-paper-warm)"
+          stroke="#b58552"
+          strokeWidth="0.6"
+          strokeOpacity="0.55"
+        />
+
+        {/* 5. Top triangle flap (closing flap; point just past center so it
+              visibly sits on TOP of the meeting point — that's where the
+              seal goes). Will animate up/back when envelope opens. */}
+        <polygon
+          ref={topFlapRef}
+          points="0,0 300,0 150,212"
+          fill="url(#env-paper-cool)"
+          stroke="#b58552"
+          strokeWidth="0.6"
+          strokeOpacity="0.55"
+          style={{ transformOrigin: "150px 0px", transformBox: "fill-box" }}
+        />
+      </g>
+    </svg>
+  );
+}
 
 export function Hero() {
   const t = useT();
@@ -20,6 +145,12 @@ export function Hero() {
   const closedRef = useRef<HTMLDivElement>(null);
   const sealRef = useRef<HTMLSpanElement>(null);
   const backRef = useRef<HTMLImageElement>(null);
+  // 5 pieces of the closed-state SVG envelope (for future per-piece animation)
+  const envBodyRef = useRef<SVGRectElement>(null);
+  const envLeftFlapRef = useRef<SVGPolygonElement>(null);
+  const envRightFlapRef = useRef<SVGPolygonElement>(null);
+  const envBottomFlapRef = useRef<SVGPolygonElement>(null);
+  const envTopFlapRef = useRef<SVGPolygonElement>(null);
   const sheet1Ref = useRef<HTMLDivElement>(null);
   const sheet2Ref = useRef<HTMLDivElement>(null);
   const sheet3Ref = useRef<HTMLDivElement>(null);
@@ -236,21 +367,20 @@ export function Hero() {
           </span>
         </div>
 
-        {/* Closed-envelope graphic — the front face you see before clicking.
-            Uses layer-envelope-front.png because closed-envelope.png is a
-            blank/scribble file (the only real envelope graphic in the
-            asset set is the "front" layer). */}
+        {/* Closed-envelope — 5 SVG pieces (body rectangle + left triangle +
+            right triangle + bottom trapezoid + top triangle). Each piece
+            has its own ref so future iterations can animate them
+            independently (e.g. top flap rotating open). */}
         <div
           ref={closedRef}
-          className="pointer-events-none absolute inset-0 z-20 grid place-items-center"
+          className="pointer-events-none absolute inset-0 z-20"
         >
-          <Image
-            src="/wedding-assets/layer-envelope-front.png"
-            alt=""
-            width={1122}
-            height={1402}
-            priority
-            className="h-full w-full object-contain drop-shadow-[0_18px_36px_rgba(45,34,24,0.32)]"
+          <EnvelopeSvg
+            bodyRef={envBodyRef}
+            leftFlapRef={envLeftFlapRef}
+            rightFlapRef={envRightFlapRef}
+            bottomFlapRef={envBottomFlapRef}
+            topFlapRef={envTopFlapRef}
           />
         </div>
 
@@ -259,8 +389,8 @@ export function Hero() {
             meets the body, matching the PNG's existing seal position). */}
         <span
           ref={sealRef}
-          className="pointer-events-none absolute z-40 h-28 w-28 md:h-32 md:w-32"
-          style={{ top: "62%", left: "50%", transform: "translate(-50%, -50%)" }}
+          className="pointer-events-none absolute z-40 h-24 w-24 md:h-28 md:w-28"
+          style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
           aria-hidden
         >
           <Image
