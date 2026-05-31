@@ -142,7 +142,6 @@ export function Hero() {
   const sealRef = useRef<HTMLSpanElement>(null);
   const sheet1Ref = useRef<HTMLDivElement>(null);
   const sheet2Ref = useRef<HTMLDivElement>(null);
-  const sheet3Ref = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const leftSprigRef = useRef<HTMLSpanElement>(null);
   const rightSprigRef = useRef<HTMLSpanElement>(null);
@@ -153,7 +152,7 @@ export function Hero() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduce) {
-      gsap.set([sheet1Ref.current, sheet2Ref.current, sheet3Ref.current, cardRef.current, leftSprigRef.current, rightSprigRef.current, hintRef.current], {
+      gsap.set([sheet1Ref.current, sheet2Ref.current, cardRef.current, leftSprigRef.current, rightSprigRef.current, hintRef.current], {
         autoAlpha: 1, x: 0, y: 0, rotate: 0,
       });
       gsap.set([sealRef.current], { autoAlpha: 0 });
@@ -166,7 +165,7 @@ export function Hero() {
     // them near the bottom of the pocket). The animation timeline below
     // raises them out one by one so they visibly emerge from the envelope.
     gsap.set(cardRef.current, { autoAlpha: 0, y: 220, rotate: 0 });
-    gsap.set([sheet1Ref.current, sheet2Ref.current, sheet3Ref.current], {
+    gsap.set([sheet1Ref.current, sheet2Ref.current], {
       autoAlpha: 0, y: 240, scale: 0.96, rotate: 0,
     });
     gsap.set(leftSprigRef.current, { autoAlpha: 0, x: 50, y: 30, rotate: -28 });
@@ -224,23 +223,17 @@ export function Hero() {
         duration: 0.4, ease: "power2.out",
       }, "-=0.25")
 
-      // 5. Photo 1 (LEFT)
+      // 5. Photo 1 (LEFT) emerges from inside, fans out left + tilts ccw
       .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -40, x: -60, rotate: -14, scale: 1,
-        duration: 0.3, ease: "power2.out",
+        autoAlpha: 1, y: -40, x: -70, rotate: -16, scale: 1,
+        duration: 0.32, ease: "power2.out",
       }, "-=0.05")
 
-      // 6. Photo 2 (CENTER)
+      // 6. Photo 2 (RIGHT) emerges from inside, fans out right + tilts cw
       .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -55, x: 8, rotate: 5, scale: 1,
-        duration: 0.3, ease: "power2.out",
-      }, "-=0.18")
-
-      // 7. Photo 3 (RIGHT)
-      .to(sheet3Ref.current, {
-        autoAlpha: 1, y: -40, x: 60, rotate: 16, scale: 1,
-        duration: 0.3, ease: "power2.out",
-      }, "-=0.18")
+        autoAlpha: 1, y: -40, x: 70, rotate: 16, scale: 1,
+        duration: 0.32, ease: "power2.out",
+      }, "-=0.2")
 
       // 8. Floral sprigs glide in
       .to([leftSprigRef.current, rightSprigRef.current], {
@@ -307,46 +300,34 @@ export function Hero() {
         }}
       >
 
-        {/* Left photo sheet (gallery[0]) — fans out to the left */}
+        {/* Two portrait photo sheets — aspect-[3/4] = width:height = 3:4 so
+            height > width (portrait orientation). Fans out symmetrically. */}
+
+        {/* Photo 1 — LEFT, gallery[0] */}
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[6%] top-[18%] z-40 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[8%] top-[18%] z-40 aspect-[3/4] w-[36%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
             alt="Wedding moment 1"
-            width={800}
+            width={600}
             height={800}
             className="h-full w-full object-cover"
           />
         </div>
 
-        {/* Right photo sheet (gallery[2]) — fans out to the right */}
-        <div
-          ref={sheet3Ref}
-          style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[6%] top-[18%] z-40 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
-        >
-          <Image
-            src={invitation.photos.gallery[2]}
-            alt="Wedding moment 3"
-            width={800}
-            height={800}
-            className="h-full w-full object-cover"
-          />
-        </div>
-
-        {/* Center photo sheet (gallery[1]) — peeks slightly higher than the two side sheets */}
+        {/* Photo 2 — RIGHT, gallery[1] */}
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-1/2 top-[13%] z-[45] aspect-square w-[50%] -translate-x-1/2 origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[8%] top-[18%] z-40 aspect-[3/4] w-[36%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
             alt="Wedding moment 2"
-            width={800}
+            width={600}
             height={800}
             className="h-full w-full object-cover"
           />
