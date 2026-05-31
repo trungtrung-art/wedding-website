@@ -250,20 +250,21 @@ export function Hero() {
         <p className="text-xs font-medium uppercase tracking-[0.42em] text-burgundy-900/70">
           {t("hero.kicker")}
         </p>
-        {/* Stepped / staircase layout: groom-name flush-left, ampersand
-            indented in the middle, bride-name flush-right. Each on its
-            own line, whitespace-nowrap so names don't wrap. Font sized
-            smaller (text-8xl instead of text-9xl) so the step is clearly
-            visible — at text-9xl the names are so wide they fill the
-            container and the alignment offset is invisible. */}
-        <div className="w-full space-y-2">
-          <h1 className="couple-name -ml-2 whitespace-nowrap text-left text-6xl leading-none text-burgundy-900 md:text-8xl">
+        {/* Stepped layout with a precise meeting point: 2-column grid
+            where the GROOM sits in column 1 right-aligned (so its last
+            letter touches the column boundary at 50%) and the BRIDE sits
+            in column 2 left-aligned (so its first letter starts at the
+            same boundary). The "&" spans both columns text-centered, so
+            it lands exactly on that 50% line. End of "Trung", the "&",
+            and start of "Quỳnh" all align vertically at the middle. */}
+        <div className="grid w-full grid-cols-2 items-baseline gap-y-2">
+          <h1 className="couple-name col-start-1 col-end-2 whitespace-nowrap pr-2 text-right text-6xl leading-none text-burgundy-900 md:text-8xl">
             {invitation.couple.groom.name}
           </h1>
-          <p className="couple-connector pl-[22%] text-left text-5xl leading-none text-bronze-500 md:text-7xl md:pl-[28%]">
+          <p className="couple-connector col-span-2 col-start-1 text-center text-5xl leading-none text-bronze-500 md:text-7xl">
             &amp;
           </p>
-          <h2 className="couple-name -mr-2 whitespace-nowrap text-right text-6xl leading-none text-burgundy-900 md:text-8xl">
+          <h2 className="couple-name col-start-2 col-end-3 whitespace-nowrap pl-2 text-left text-6xl leading-none text-burgundy-900 md:text-8xl">
             {invitation.couple.bride.name}
           </h2>
         </div>
