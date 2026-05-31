@@ -162,9 +162,13 @@ export function Hero() {
       return;
     }
 
-    gsap.set([sheet1Ref.current, sheet3Ref.current], { autoAlpha: 0, y: 60, scale: 0.95 });
-    gsap.set(sheet2Ref.current, { autoAlpha: 0, y: 80, scale: 0.95 });
-    gsap.set(cardRef.current, { autoAlpha: 0, y: 100, rotate: -3 });
+    // All cards/sheets start DEEP inside the envelope (high y offset puts
+    // them near the bottom of the pocket). The animation timeline below
+    // raises them out one by one so they visibly emerge from the envelope.
+    gsap.set(cardRef.current, { autoAlpha: 0, y: 220, rotate: 0 });
+    gsap.set([sheet1Ref.current, sheet2Ref.current, sheet3Ref.current], {
+      autoAlpha: 0, y: 240, scale: 0.96, rotate: 0,
+    });
     gsap.set(leftSprigRef.current, { autoAlpha: 0, x: 50, y: 30, rotate: -28 });
     gsap.set(rightSprigRef.current, { autoAlpha: 0, x: -50, y: 30, rotate: 28 });
     gsap.set(hintRef.current, { autoAlpha: 0, y: 18 });
@@ -204,43 +208,49 @@ export function Hero() {
     tl
       // 1. Envelope rises slightly — anticipation (no scale change on click)
       .to(shellRef.current, { y: -14, duration: 0.5 })
-      // 2. Wax seal "breaks" — scales down, rotates, fades
+      // 2. Wax seal "breaks"
       .to(sealRef.current, {
         scale: 0.55, rotate: 22, autoAlpha: 0,
         duration: 0.55, ease: "back.in(1.6)",
       }, "-=0.1")
-      // 3. Top triangle flap HINGES back in real 3D space (CSS perspective +
-      //    transformStyle: preserve-3d on the button parent). The 4 stable
-      //    pieces (body + L/R triangles + bottom trapezoid) stay put as
-      //    the visible envelope pocket.
+      // 3. Top triangle flap hinges back in real 3D space
       .to(topFlapRef.current, {
-        rotateX: -158, duration: 1.2, ease: "power3.inOut",
-      }, "-=0.4")
-      // 4. THREE photo sheets fan out from inside the envelope
-      .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -38, x: -42, rotate: -9, scale: 1, duration: 0.95,
-      }, "-=0.4")
-      .to(sheet3Ref.current, {
-        autoAlpha: 1, y: -38, x: 42, rotate: 9, scale: 1, duration: 0.95,
-      }, "<")
-      .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -56, scale: 1, duration: 0.95,
-      }, "<+0.08")
-      // 6. Main SAVE THE DATE card rises out of the envelope (-160px) with
-      //    a slight clockwise tilt (rotate: 6deg) so it lands at a casual
-      //    angle — top edge tilts right, bottom edge tilts left, like a
-      //    card tossed onto the table rather than perfectly squared.
+        rotateX: -158, duration: 1.0, ease: "power3.inOut",
+      }, "-=0.35")
+
+      // 4. SAVE THE DATE card emerges FIRST from inside the envelope —
+      //    rises 220+160=~380px up, lands with a casual 6° clockwise tilt
       .to(cardRef.current, {
-        autoAlpha: 1, y: -160, rotate: 6, duration: 1.2, ease: "power3.out",
-      }, "<+0.2")
-      // 7. Floral sprigs glide in from corners
+        autoAlpha: 1, y: -160, rotate: 6,
+        duration: 0.9, ease: "power2.out",
+      }, "-=0.4")
+
+      // 5. After the card settles, photo 1 (LEFT) emerges from the pocket
+      //    and lands at a casual angle, slid left
+      .to(sheet1Ref.current, {
+        autoAlpha: 1, y: -40, x: -60, rotate: -14, scale: 1,
+        duration: 0.7, ease: "power2.out",
+      }, "+=0.15")
+
+      // 6. Then photo 2 (CENTER) emerges, lands slightly tilted right
+      .to(sheet2Ref.current, {
+        autoAlpha: 1, y: -55, x: 8, rotate: 5, scale: 1,
+        duration: 0.7, ease: "power2.out",
+      }, "+=0.25")
+
+      // 7. Then photo 3 (RIGHT) emerges, slid right with a bigger tilt
+      .to(sheet3Ref.current, {
+        autoAlpha: 1, y: -40, x: 60, rotate: 16, scale: 1,
+        duration: 0.7, ease: "power2.out",
+      }, "+=0.25")
+
+      // 8. Floral sprigs glide in from corners
       .to([leftSprigRef.current, rightSprigRef.current], {
-        autoAlpha: 1, x: 0, y: 0, rotate: 0, stagger: 0.12, duration: 0.85,
-      }, "-=0.7")
-      // 8. (Intro names stay put — moving them clips them at the top
-      //     of the viewport in tighter window sizes.)
+        autoAlpha: 1, x: 0, y: 0, rotate: 0, stagger: 0.12, duration: 0.6,
+      }, "+=0.1")
+
       // 9. Scroll hint reveals at bottom
-      .to(hintRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.5");
+      .to(hintRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, "-=0.2");
   };
 
   return (

@@ -1,0 +1,27 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "viewport": { "width": 1440, "height": 900 },
+  "states": [
+    { "name": "01-closed", "url": "/", "actions": [{ "wait": 600 }] },
+    {
+      "name": "02-after-click-1s",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 1100 }]
+    },
+    {
+      "name": "03-after-click-2s",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 2100 }]
+    },
+    {
+      "name": "04-after-click-3s",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 3100 }]
+    },
+    {
+      "name": "05-after-click-fully-open",
+      "url": "/",
+      "actions": [{ "wait": 400 }, { "click": "button[aria-expanded]" }, { "wait": 5000 }]
+    }
+  ]
+}
