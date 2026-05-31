@@ -243,7 +243,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-between gap-6 px-5 py-6 text-center md:py-10"
+      className="relative mx-auto flex min-h-screen max-w-screen-2xl flex-col items-center justify-between gap-8 px-6 py-8 text-center md:py-14"
     >
       {/* Intro: couple names */}
       <div ref={introRef} className="w-full space-y-5">
@@ -257,14 +257,23 @@ export function Hero() {
             same boundary). The "&" spans both columns text-centered, so
             it lands exactly on that 50% line. End of "Trung", the "&",
             and start of "Quỳnh" all align vertically at the middle. */}
-        <div className="grid w-full grid-cols-2 items-baseline gap-y-2">
-          <h1 className="couple-name col-start-1 col-end-2 whitespace-nowrap pr-2 text-right text-6xl leading-none text-burgundy-900 md:text-8xl">
+        {/* Grid with auto-sized columns: each name's column is exactly as
+            wide as the name's text (no 50/50 split that clips). The two
+            columns share a boundary in the middle — that's where the
+            "g" of Trung ends and the "Q" of Quỳnh starts. The ampersand
+            col-spans both and text-centers, landing on that boundary. */}
+        {/* Sizes calibrated to fit BOTH names side-by-side in each breakpoint's
+            viewport: ~11-char names (Thiện Trung / Quỳnh Trang) at the font
+            size need 2 × (chars × ~0.6 × font-size) ≤ viewport - padding.
+            Capped at text-[7rem] on 2xl+ screens where it actually fits. */}
+        <div className="grid w-full grid-cols-[max-content_max-content] items-baseline justify-center gap-y-3">
+          <h1 className="couple-name col-start-1 col-end-2 whitespace-nowrap pr-3 text-right text-6xl leading-[0.95] text-burgundy-900 md:text-7xl lg:text-8xl xl:text-[6.5rem] 2xl:text-[7.5rem]">
             {invitation.couple.groom.name}
           </h1>
-          <p className="couple-connector col-span-2 col-start-1 text-center text-5xl leading-none text-bronze-500 md:text-7xl">
+          <p className="couple-connector col-span-2 col-start-1 text-center text-5xl leading-none text-bronze-500 md:text-6xl lg:text-7xl xl:text-[5rem] 2xl:text-[6rem]">
             &amp;
           </p>
-          <h2 className="couple-name col-start-2 col-end-3 whitespace-nowrap pl-2 text-left text-6xl leading-none text-burgundy-900 md:text-8xl">
+          <h2 className="couple-name col-start-2 col-end-3 whitespace-nowrap pl-3 text-left text-6xl leading-[0.95] text-burgundy-900 md:text-7xl lg:text-8xl xl:text-[6.5rem] 2xl:text-[7.5rem]">
             {invitation.couple.bride.name}
           </h2>
         </div>
@@ -279,9 +288,9 @@ export function Hero() {
         onClick={open}
         className="group relative grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
         style={{
-          width: "clamp(320px, 42vw, 480px)",
+          width: "clamp(440px, 55vw, 720px)",
           aspectRatio: "4/3",
-          perspective: "1500px",
+          perspective: "2200px",
           perspectiveOrigin: "center top",
           transformStyle: "preserve-3d",
         }}
@@ -336,18 +345,18 @@ export function Hero() {
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-1/2 top-[16%] z-50 flex aspect-[3/4] w-[60%] -translate-x-1/2 flex-col items-center justify-center bg-cream-50 px-3 py-4"
+          className="paper-panel pointer-events-none absolute left-1/2 top-[16%] z-50 flex aspect-[3/4] w-[60%] -translate-x-1/2 flex-col items-center justify-center bg-cream-50 px-4 py-5"
         >
-          <span className="text-[0.55rem] uppercase tracking-[0.42em] text-burgundy-900/60">
+          <span className="text-[0.7rem] uppercase tracking-[0.42em] text-burgundy-900/60">
             {invitation.couple.initials}
           </span>
-          <span className="mt-1 font-serif text-2xl font-light uppercase leading-none text-burgundy-900">
+          <span className="mt-2 font-serif text-3xl font-light uppercase leading-none text-burgundy-900 md:text-4xl">
             {t("hero.saveTheDateLine1")}
           </span>
-          <span className="mt-0.5 font-serif text-2xl font-light uppercase leading-none text-burgundy-900">
+          <span className="mt-1 font-serif text-3xl font-light uppercase leading-none text-burgundy-900 md:text-4xl">
             {t("hero.saveTheDateLine2")}
           </span>
-          <div className="mt-2 h-[42%] w-full overflow-hidden">
+          <div className="mt-3 h-[42%] w-full overflow-hidden">
             <Image
               src={invitation.photos.hero}
               alt=""
@@ -356,7 +365,7 @@ export function Hero() {
               className="h-full w-full object-cover"
             />
           </div>
-          <span className="mt-2 text-[0.55rem] uppercase tracking-[0.28em] text-burgundy-900/70">
+          <span className="mt-3 text-[0.7rem] uppercase tracking-[0.28em] text-burgundy-900/70">
             {invitation.ceremony.solarDate}
           </span>
         </div>
