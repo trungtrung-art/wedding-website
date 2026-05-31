@@ -226,9 +226,11 @@ export function Hero() {
       .to(sheet2Ref.current, {
         autoAlpha: 1, y: -56, scale: 1, duration: 0.95,
       }, "<+0.08")
-      // 6. Main SAVE THE DATE card slides up on top
+      // 6. Main SAVE THE DATE card emerges as a backdrop (card sits behind
+      //    the photo sheets at z-[25]; small y-shift so it doesn't fly off
+      //    the envelope since it starts higher at top-[2%])
       .to(cardRef.current, {
-        autoAlpha: 1, y: -78, rotate: 0, duration: 1.1, ease: "power3.out",
+        autoAlpha: 1, y: -20, rotate: 0, duration: 1.1, ease: "power3.out",
       }, "<+0.2")
       // 7. Floral sprigs glide in from corners
       .to([leftSprigRef.current, rightSprigRef.current], {
@@ -300,7 +302,7 @@ export function Hero() {
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[6%] top-[18%] z-30 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[6%] top-[18%] z-40 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
@@ -315,7 +317,7 @@ export function Hero() {
         <div
           ref={sheet3Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[6%] top-[18%] z-30 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[6%] top-[18%] z-40 aspect-square w-[42%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[2]}
@@ -330,7 +332,7 @@ export function Hero() {
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-1/2 top-[13%] z-40 aspect-square w-[50%] -translate-x-1/2 origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-1/2 top-[13%] z-[45] aspect-square w-[50%] -translate-x-1/2 origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
@@ -342,10 +344,15 @@ export function Hero() {
         </div>
 
         {/* Main SAVE THE DATE card — top layer */}
+        {/* Card sits HIGHER than the photo sheets (top-[2%] vs top-[18%])
+            and BEHIND them in stacking (z-[35] vs z-40/z-[45]) but ABOVE
+            the open flap (z-30). Aspect-square + 64% width keeps the card
+            contained within the envelope bounds; top edge peeks above the
+            photos with SAVE / DATE visible, the rest is covered. */}
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-1/2 top-[16%] z-50 flex aspect-[3/4] w-[60%] -translate-x-1/2 flex-col items-center justify-start bg-cream-50 px-4 pb-5 pt-8"
+          className="paper-panel pointer-events-none absolute left-1/2 top-[5%] z-[35] flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-cream-50 px-4 pt-6"
         >
           <span className="text-[0.7rem] uppercase tracking-[0.42em] text-burgundy-900/60">
             {invitation.couple.initials}
