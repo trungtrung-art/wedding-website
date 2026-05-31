@@ -202,8 +202,8 @@ export function Hero() {
     });
 
     tl
-      // 1. Envelope rises slightly — anticipation
-      .to(shellRef.current, { y: -14, scale: 1.025, duration: 0.5 })
+      // 1. Envelope rises slightly — anticipation (no scale change on click)
+      .to(shellRef.current, { y: -14, duration: 0.5 })
       // 2. Wax seal "breaks" — scales down, rotates, fades
       .to(sealRef.current, {
         scale: 0.55, rotate: 22, autoAlpha: 0,
