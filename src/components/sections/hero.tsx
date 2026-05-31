@@ -266,14 +266,14 @@ export function Hero() {
             viewport: ~11-char names (Thiện Trung / Quỳnh Trang) at the font
             size need 2 × (chars × ~0.6 × font-size) ≤ viewport - padding.
             Capped at text-[7rem] on 2xl+ screens where it actually fits. */}
-        <div className="grid w-full grid-cols-[max-content_max-content] items-baseline justify-center gap-y-3">
-          <h1 className="couple-name col-start-1 col-end-2 whitespace-nowrap pr-3 text-right text-6xl leading-[0.95] text-burgundy-900 md:text-7xl lg:text-8xl xl:text-[6.5rem] 2xl:text-[7.5rem]">
+        <div className="grid w-full grid-cols-[max-content_max-content] items-baseline justify-center gap-y-2">
+          <h1 className="couple-name col-start-1 col-end-2 whitespace-nowrap pr-3 text-right text-4xl leading-[0.95] text-burgundy-900 sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
             {invitation.couple.groom.name}
           </h1>
-          <p className="couple-connector col-span-2 col-start-1 text-center text-5xl leading-none text-bronze-500 md:text-6xl lg:text-7xl xl:text-[5rem] 2xl:text-[6rem]">
+          <p className="couple-connector col-span-2 col-start-1 text-center text-3xl leading-none text-bronze-500 sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
             &amp;
           </p>
-          <h2 className="couple-name col-start-2 col-end-3 whitespace-nowrap pl-3 text-left text-6xl leading-[0.95] text-burgundy-900 md:text-7xl lg:text-8xl xl:text-[6.5rem] 2xl:text-[7.5rem]">
+          <h2 className="couple-name col-start-2 col-end-3 whitespace-nowrap pl-3 text-left text-4xl leading-[0.95] text-burgundy-900 sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
             {invitation.couple.bride.name}
           </h2>
         </div>
