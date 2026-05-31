@@ -1,0 +1,40 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "viewport": { "width": 1440, "height": 900 },
+  "states": [
+    {
+      "name": "01-hero",
+      "url": "/",
+      "actions": [{ "wait": 800 }]
+    },
+    {
+      "name": "02-after-burst-of-wheels",
+      "url": "/",
+      "actions": [
+        { "wait": 400 },
+        { "scroll": 80 }, { "wait": 50 },
+        { "scroll": 60 }, { "wait": 50 },
+        { "scroll": 40 }, { "wait": 50 },
+        { "scroll": 30 }, { "wait": 50 },
+        { "scroll": 25 }, { "wait": 50 },
+        { "scroll": 20 }, { "wait": 80 },
+        { "scroll": 15 }, { "wait": 100 },
+        { "scroll": 10 }, { "wait": 150 },
+        { "scroll": 5 },  { "wait": 1500 }
+      ]
+    },
+    {
+      "name": "03-second-intentional-burst",
+      "url": "/",
+      "actions": [
+        { "wait": 400 },
+        { "scroll": 80 }, { "wait": 50 },
+        { "scroll": 50 }, { "wait": 50 },
+        { "scroll": 30 }, { "wait": 1500 },
+        { "scroll": 80 }, { "wait": 50 },
+        { "scroll": 50 }, { "wait": 50 },
+        { "scroll": 30 }, { "wait": 1500 }
+      ]
+    }
+  ]
+}

@@ -16,8 +16,12 @@
 
 import { useEffect } from "react";
 
-const COOLDOWN_MS = 900;        // lock-out window after each navigation
-const TOUCH_THRESHOLD_PX = 60;  // min vertical swipe distance to trigger nav
+const COOLDOWN_MS = 900;            // initial lock-out window after navigation
+const INERTIA_EXTENSION_MS = 350;   // each wheel event during cooldown extends
+                                    // lock by this much — defeats trackpad
+                                    // momentum scroll which keeps firing events
+                                    // for 500–1500ms after finger-lift
+const TOUCH_THRESHOLD_PX = 60;      // min vertical swipe distance to trigger nav
 
 export function SnapScrollController() {
   useEffect(() => {
@@ -51,7 +55,20 @@ export function SnapScrollController() {
       // Allow zoom and modifier-key combos to pass through
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       e.preventDefault();
-      if (Date.now() < lockUntil) return;
+      const now = Date.now();
+
+      // KEY FIX for Mac trackpad: while we're in the cooldown window, any
+      // arriving wheel event EXTENDS the lock by INERTIA_EXTENSION_MS. This
+      // means as long as momentum events keep firing, the lock stays armed.
+      // The lock only truly expires after the wheel events go quiet for
+      // INERTIA_EXTENSION_MS. Without this, a momentum event arriving just
+      // after the initial 900ms cooldown would trigger an unwanted second
+      // section advance.
+      if (now < lockUntil) {
+        lockUntil = Math.max(lockUntil, now + INERTIA_EXTENSION_MS);
+        return;
+      }
+
       currentIndex = indexFromScroll(); // re-sync in case user jumped via anchor
       if (e.deltaY > 0) goTo(currentIndex + 1);
       else if (e.deltaY < 0) goTo(currentIndex - 1);
