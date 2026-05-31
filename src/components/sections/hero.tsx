@@ -217,25 +217,25 @@ export function Hero() {
         rotateX: -158, duration: 0.45, ease: "power3.inOut",
       }, "-=0.2")
 
-      // 4. SAVE THE DATE card emerges FIRST from inside the envelope
+      // 4. SAVE THE DATE card rises high — text stays just above the
+      //    photo tops without leaving the viewport
       .to(cardRef.current, {
-        autoAlpha: 1, y: -160, rotate: 6,
-        duration: 0.4, ease: "power2.out",
+        autoAlpha: 1, y: -340, rotate: 6,
+        duration: 0.45, ease: "power2.out",
       }, "-=0.25")
 
-      // 5. Photo 1 (LEFT) settles at its static position (no x shift —
-      //    static positions already create the 30% overlap with photo 2)
+      // 5. Photo 1 (LEFT) — rises so ~70% of photo sits ABOVE envelope
+      //    top edge (only ~30% remains inside the pocket)
       .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -40, x: 0, rotate: -8, scale: 1,
-        duration: 0.32, ease: "power2.out",
-      }, "-=0.05")
+        autoAlpha: 1, y: -270, x: 0, rotate: -8, scale: 1,
+        duration: 0.4, ease: "power2.out",
+      }, "-=0.1")
 
-      // 6. Photo 2 (RIGHT) settles ON TOP of photo 1 — its left edge sits
-      //    well into photo 1's territory for a ~30% overlap
+      // 6. Photo 2 (RIGHT) — rises to match, ~30% overlap with photo 1
       .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -40, x: 0, rotate: 8, scale: 1,
-        duration: 0.32, ease: "power2.out",
-      }, "-=0.2")
+        autoAlpha: 1, y: -270, x: 0, rotate: 8, scale: 1,
+        duration: 0.4, ease: "power2.out",
+      }, "-=0.28")
 
       // 8. Floral sprigs glide in
       .to([leftSprigRef.current, rightSprigRef.current], {
