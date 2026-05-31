@@ -300,15 +300,15 @@ export function Hero() {
         }}
       >
 
-        {/* Two portrait photos placed CLOSE TOGETHER near the center.
-            With left/right-[18%] + w-[32%], inner edges meet at the
-            envelope center (50%) — photos touch / slightly overlap. */}
+        {/* Two LARGER portrait photos placed close together near the center.
+            With left/right-[10%] + w-[40%], inner edges meet at the
+            envelope center (50%) — photos touch in the middle. */}
 
         {/* Photo 1 — LEFT, gallery[0] */}
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[18%] top-[20%] z-40 aspect-[3/4] w-[32%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[10%] top-[18%] z-40 aspect-[3/4] w-[40%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
@@ -323,7 +323,7 @@ export function Hero() {
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[18%] top-[20%] z-40 aspect-[3/4] w-[32%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[10%] top-[18%] z-40 aspect-[3/4] w-[40%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
