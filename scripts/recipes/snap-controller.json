@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "viewport": { "width": 1440, "height": 900 },
+  "states": [
+    { "name": "01-hero",         "url": "/", "actions": [{ "wait": 800 }] },
+    { "name": "02-after-wheel-1", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 100 }, { "wait": 1200 }] },
+    { "name": "03-after-wheel-2", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 100 }, { "wait": 1200 }, { "scroll": 100 }, { "wait": 1200 }] },
+    { "name": "04-after-wheel-3", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 100 }, { "wait": 1200 }, { "scroll": 100 }, { "wait": 1200 }, { "scroll": 100 }, { "wait": 1200 }] },
+    { "name": "05-after-pagedown", "url": "/", "actions": [{ "wait": 400 }, { "scroll": 100 }, { "wait": 1200 }, { "scroll": 100 }, { "wait": 1200 }, { "scroll": 100 }, { "wait": 1200 }, { "scroll": 100 }, { "wait": 1200 }] }
+  ]
+}
