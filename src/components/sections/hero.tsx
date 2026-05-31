@@ -217,21 +217,21 @@ export function Hero() {
         rotateX: -158, duration: 0.45, ease: "power3.inOut",
       }, "-=0.2")
 
-      // 4. SAVE THE DATE card — slight right shift to lean the group right
+      // 4. SAVE THE DATE card rises out of envelope
       .to(cardRef.current, {
-        autoAlpha: 1, y: -260, x: 15, rotate: 6,
+        autoAlpha: 1, y: -260, rotate: 6,
         duration: 0.45, ease: "power2.out",
       }, "-=0.25")
 
-      // 5. Photo 1 (LEFT) — same right shift to keep group together
+      // 5. Photo 1 (LEFT) — rises so a good portion sits above envelope rim
       .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -200, x: 15, rotate: -8, scale: 1,
+        autoAlpha: 1, y: -200, x: 0, rotate: -8, scale: 1,
         duration: 0.4, ease: "power2.out",
       }, "-=0.1")
 
-      // 6. Photo 2 (RIGHT) — same right shift
+      // 6. Photo 2 (RIGHT) — rises to match, ~30% overlap with photo 1
       .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -200, x: 15, rotate: 8, scale: 1,
+        autoAlpha: 1, y: -200, x: 0, rotate: 8, scale: 1,
         duration: 0.4, ease: "power2.out",
       }, "-=0.28")
 
