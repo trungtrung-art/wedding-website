@@ -226,11 +226,12 @@ export function Hero() {
       .to(sheet2Ref.current, {
         autoAlpha: 1, y: -56, scale: 1, duration: 0.95,
       }, "<+0.08")
-      // 6. Main SAVE THE DATE card emerges as a backdrop (card sits behind
-      //    the photo sheets at z-[25]; small y-shift so it doesn't fly off
-      //    the envelope since it starts higher at top-[2%])
+      // 6. Main SAVE THE DATE card rises OUT of the envelope (-110px)
+      //    so the T&Q / SAVE / DATE text sits clearly ABOVE the photos
+      //    (which top out at envelope y≈70-100px). The lower half of
+      //    the card stays inside the pocket, covered by the fanned photos.
       .to(cardRef.current, {
-        autoAlpha: 1, y: -20, rotate: 0, duration: 1.1, ease: "power3.out",
+        autoAlpha: 1, y: -110, rotate: 0, duration: 1.2, ease: "power3.out",
       }, "<+0.2")
       // 7. Floral sprigs glide in from corners
       .to([leftSprigRef.current, rightSprigRef.current], {
@@ -344,11 +345,11 @@ export function Hero() {
         </div>
 
         {/* Main SAVE THE DATE card — top layer */}
-        {/* Card sits HIGHER than the photo sheets (top-[2%] vs top-[18%])
-            and BEHIND them in stacking (z-[35] vs z-40/z-[45]) but ABOVE
-            the open flap (z-30). Aspect-square + 64% width keeps the card
-            contained within the envelope bounds; top edge peeks above the
-            photos with SAVE / DATE visible, the rest is covered. */}
+        {/* Card sits BEHIND the photos (z-[35] vs z-40/z-[45]) and rises
+            out of the envelope on open (y: -110 in the animation timeline)
+            so the T&Q / SAVE / DATE text ends up ABOVE the photos.
+            The lower portion of the card stays inside the envelope
+            pocket, hidden behind the photo sheets. */}
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
