@@ -246,16 +246,24 @@ export function Hero() {
       className="relative mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-between gap-6 px-5 py-6 text-center md:py-10"
     >
       {/* Intro: couple names */}
-      <div ref={introRef} className="space-y-5">
+      <div ref={introRef} className="w-full space-y-5">
         <p className="text-xs font-medium uppercase tracking-[0.42em] text-burgundy-900/70">
           {t("hero.kicker")}
         </p>
-        <div className="space-y-1">
-          <h1 className="couple-name text-7xl leading-none text-burgundy-900 md:text-9xl">
+        {/* Stepped / staircase layout: groom-name flush-left, ampersand
+            indented in the middle, bride-name flush-right. Each on its
+            own line, whitespace-nowrap so names don't wrap. Font sized
+            smaller (text-8xl instead of text-9xl) so the step is clearly
+            visible — at text-9xl the names are so wide they fill the
+            container and the alignment offset is invisible. */}
+        <div className="w-full space-y-2">
+          <h1 className="couple-name -ml-2 whitespace-nowrap text-left text-6xl leading-none text-burgundy-900 md:text-8xl">
             {invitation.couple.groom.name}
           </h1>
-          <p className="couple-connector text-6xl leading-none text-bronze-500 md:text-8xl">&amp;</p>
-          <h2 className="couple-name text-7xl leading-none text-burgundy-900 md:text-9xl">
+          <p className="couple-connector pl-[22%] text-left text-5xl leading-none text-bronze-500 md:text-7xl md:pl-[28%]">
+            &amp;
+          </p>
+          <h2 className="couple-name -mr-2 whitespace-nowrap text-right text-6xl leading-none text-burgundy-900 md:text-8xl">
             {invitation.couple.bride.name}
           </h2>
         </div>
