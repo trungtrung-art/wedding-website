@@ -1,0 +1,29 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "viewport": { "width": 1200, "height": 800 },
+  "states": [
+    {
+      "name": "01-closed",
+      "url": "/demo/envelope-css-3d",
+      "actions": [{ "wait": 600 }]
+    },
+    {
+      "name": "02-mid-open",
+      "url": "/demo/envelope-css-3d",
+      "actions": [
+        { "wait": 400 },
+        { "click": "button[aria-expanded]" },
+        { "wait": 700 }
+      ]
+    },
+    {
+      "name": "03-fully-open",
+      "url": "/demo/envelope-css-3d",
+      "actions": [
+        { "wait": 400 },
+        { "click": "button[aria-expanded]" },
+        { "wait": 2500 }
+      ]
+    }
+  ]
+}
