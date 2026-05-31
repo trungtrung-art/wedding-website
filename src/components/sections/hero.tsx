@@ -226,10 +226,12 @@ export function Hero() {
       .to(sheet2Ref.current, {
         autoAlpha: 1, y: -56, scale: 1, duration: 0.95,
       }, "<+0.08")
-      // 6. Main SAVE THE DATE card rises further OUT of the envelope (-160px)
-      //    so the T&Q / SAVE / DATE text sits well above the photos.
+      // 6. Main SAVE THE DATE card rises out of the envelope (-160px) with
+      //    a slight clockwise tilt (rotate: 6deg) so it lands at a casual
+      //    angle — top edge tilts right, bottom edge tilts left, like a
+      //    card tossed onto the table rather than perfectly squared.
       .to(cardRef.current, {
-        autoAlpha: 1, y: -160, rotate: 0, duration: 1.2, ease: "power3.out",
+        autoAlpha: 1, y: -160, rotate: 6, duration: 1.2, ease: "power3.out",
       }, "<+0.2")
       // 7. Floral sprigs glide in from corners
       .to([leftSprigRef.current, rightSprigRef.current], {
