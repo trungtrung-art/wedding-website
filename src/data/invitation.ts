@@ -28,10 +28,10 @@ export const invitation: Invitation = {
   couple: {
     groom: { name: "Thiện Trung" },
     bride: { name: "Quỳnh Trang" },
-    initials: "T&Q",
+    initials: "T&T",
   },
   ceremony: {
-    solarDate: "2027-05-22",
+    solarDate: "2026-11-8",
     lunarDate: "Thứ bảy, 02/04 Âm lịch năm Đinh Mùi",
     time: "12:00",
     venue: {

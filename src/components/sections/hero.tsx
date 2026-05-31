@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,122 +8,9 @@ import { ChevronDown, Leaf } from "lucide-react";
 import { invitation } from "@/data/invitation";
 import { useT } from "@/lib/i18n-context";
 import { MusicToggle } from "@/components/music-toggle";
-
-/**
- * EnvelopeSvg — closed-state envelope built from 5 distinct paper pieces.
- *
- * Layering (back → front in SVG paint order):
- *   1. Body rectangle — the full envelope silhouette / paper backing
- *   2. Left triangle  — flap folded inward from the left edge
- *   3. Right triangle — mirror of left
- *   4. Bottom trapezoid — flap folded UP from the bottom edge
- *   5. Top triangle — closing flap (point reaches just past center); will
- *      animate up/back when the envelope opens.
- *
- * ViewBox 400×300 matches the parent button's 4:3 LANDSCAPE aspect ratio
- * (wider than tall, like a real wedding invitation envelope — C5/C6/DL
- * formats are all landscape). The closed envelope reads as a perfect
- * rectangle with no rounded corners. The 4 flaps meet at point
- * (200, 150) which is 50%/50% of the container — that's where the
- * T&Q wax seal sits.
- */
-function EnvelopeSvg({
-  bodyRef,
-  leftFlapRef,
-  rightFlapRef,
-  bottomFlapRef,
-}: {
-  bodyRef: RefObject<SVGRectElement | null>;
-  leftFlapRef: RefObject<SVGPolygonElement | null>;
-  rightFlapRef: RefObject<SVGPolygonElement | null>;
-  bottomFlapRef: RefObject<SVGPolygonElement | null>;
-}) {
-  return (
-    <svg
-      viewBox="0 0 400 300"
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-full w-full"
-      preserveAspectRatio="xMidYMid meet"
-      aria-hidden
-    >
-      <defs>
-        {/* Cream paper gradient — subtle top-to-bottom for natural depth */}
-        <linearGradient id="env-paper" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#fdfaf3" />
-          <stop offset="100%" stopColor="#efe2cd" />
-        </linearGradient>
-
-        {/* Slightly warmer cream for the bottom trapezoid so it reads as a
-            separate piece behind the others */}
-        <linearGradient id="env-paper-warm" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f6e9d4" />
-          <stop offset="100%" stopColor="#e8d9bf" />
-        </linearGradient>
-
-        {/* Slightly cooler cream for the top flap so its fold edge is visible */}
-        <linearGradient id="env-paper-cool" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#fefcf6" />
-          <stop offset="100%" stopColor="#f4e7d0" />
-        </linearGradient>
-
-        {/* Soft drop shadow under the whole envelope */}
-        <filter id="env-shadow" x="-10%" y="-5%" width="120%" height="115%">
-          <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#2d2218" floodOpacity="0.22" />
-        </filter>
-      </defs>
-
-      <g filter="url(#env-shadow)">
-        {/* 1. Body rectangle — full silhouette, base layer.
-              No rx → sharp corners → reads as a perfect rectangle. */}
-        <rect
-          ref={bodyRef}
-          x="0"
-          y="0"
-          width="400"
-          height="300"
-          fill="url(#env-paper)"
-          stroke="#b58552"
-          strokeWidth="0.8"
-          strokeOpacity="0.45"
-        />
-
-        {/* 2. Left triangle flap (folded inward; point at center-left) */}
-        <polygon
-          ref={leftFlapRef}
-          points="0,0 0,300 130,150"
-          fill="url(#env-paper)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.5"
-        />
-
-        {/* 3. Right triangle flap (mirror) */}
-        <polygon
-          ref={rightFlapRef}
-          points="400,0 400,300 270,150"
-          fill="url(#env-paper)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.5"
-        />
-
-        {/* 4. Bottom trapezoid (folded up; parallel top/bottom edges) */}
-        <polygon
-          ref={bottomFlapRef}
-          points="130,150 270,150 400,300 0,300"
-          fill="url(#env-paper-warm)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.55"
-        />
-
-        {/* Top triangle flap is rendered OUTSIDE this SVG as an HTML div
-            (clip-path triangle) so CSS 3D transforms can hinge it in real
-            perspective space. See the topFlap div in the Hero JSX below. */}
-      </g>
-    </svg>
-  );
-}
+import { EnvelopeBody } from "@/components/envelope/EnvelopeBody";
+import { EnvelopeTopFlap } from "@/components/envelope/EnvelopeTopFlap";
+import { EnvelopeSeal } from "@/components/envelope/EnvelopeSeal";
 
 export function Hero() {
   const t = useT();
@@ -310,7 +197,7 @@ export function Hero() {
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[5%] top-[18%] z-40 aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[11%] top-[18%] z-40 aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
@@ -326,7 +213,7 @@ export function Hero() {
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[18%] top-[18%] z-[42] aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[12%] top-[18%] z-[42] aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
@@ -346,7 +233,7 @@ export function Hero() {
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-1/2 top-[5%] z-[35] flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-cream-50 px-4 pt-6"
+          className="paper-panel pointer-events-none absolute left-[56%] top-[5%] z-[35] flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-cream-50 px-4 pt-6"
         >
           <span className="text-[0.7rem] uppercase tracking-[0.42em] text-burgundy-900/60">
             {invitation.couple.initials}
@@ -364,7 +251,7 @@ export function Hero() {
             triangles + bottom trapezoid). These never move; they form
             the visible envelope from which the card emerges. */}
         <div className="pointer-events-none absolute inset-0 z-20">
-          <EnvelopeSvg
+          <EnvelopeBody
             bodyRef={envBodyRef}
             leftFlapRef={envLeftFlapRef}
             rightFlapRef={envRightFlapRef}
@@ -372,40 +259,9 @@ export function Hero() {
           />
         </div>
 
-        {/* Top triangle FLAP — separate HTML div with clip-path so CSS 3D
-            transforms can hinge it back around its top edge. Point at
-            50%/50% matches the SVG meeting point (200, 150) of 400×300. */}
-        <div
-          ref={topFlapRef}
-          className="pointer-events-none absolute inset-0 z-30"
-          style={{
-            background: "linear-gradient(to bottom, #fefcf6, #f4e7d0)",
-            clipPath: "polygon(0% 0%, 100% 0%, 50% 50%)",
-            transformOrigin: "top center",
-            transformStyle: "preserve-3d",
-            backfaceVisibility: "visible",
-            boxShadow: "inset 0 -8px 18px -10px rgba(45,34,24,0.18)",
-          }}
-          aria-hidden
-        />
+        <EnvelopeTopFlap ref={topFlapRef} />
 
-        {/* Our burgundy T&Q wax seal — overlays the gold seal painted into
-            the PNG (centered horizontally; ~58% from top is where the V flap
-            meets the body, matching the PNG's existing seal position). */}
-        <span
-          ref={sealRef}
-          className="pointer-events-none absolute z-40 h-24 w-24 md:h-28 md:w-28"
-          style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-          aria-hidden
-        >
-          <Image
-            src="/wedding-assets/seal-tq.svg"
-            alt=""
-            width={400}
-            height={400}
-            className="h-full w-full"
-          />
-        </span>
+        <EnvelopeSeal ref={sealRef} />
 
         {/* Floral sprigs */}
         <span

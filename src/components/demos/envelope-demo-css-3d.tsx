@@ -78,13 +78,32 @@ export function EnvelopeDemoCss3D() {
         >
           <defs>
             <linearGradient id="d-paper" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#fdfaf3" />
-              <stop offset="100%" stopColor="#efe2cd" />
+              <stop offset="0%" stopColor="#f8f2e5" />
+              <stop offset="42%" stopColor="#eadfc9" />
+              <stop offset="100%" stopColor="#d8c4a5" />
             </linearGradient>
             <linearGradient id="d-paper-warm" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f6e9d4" />
-              <stop offset="100%" stopColor="#e8d9bf" />
+              <stop offset="0%" stopColor="#f1e3cb" />
+              <stop offset="54%" stopColor="#e2d0b2" />
+              <stop offset="100%" stopColor="#ccb38e" />
             </linearGradient>
+            <filter id="d-paper-surface" x="-2%" y="-2%" width="104%" height="104%" colorInterpolationFilters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.045 0.23" numOctaves="4" seed="17" result="fiberNoise" />
+              <feColorMatrix
+                in="fiberNoise"
+                type="matrix"
+                values="
+                  0 0 0 0 0.55
+                  0 0 0 0 0.47
+                  0 0 0 0 0.34
+                  0 0 0 0.18 0
+                "
+                result="fiberTint"
+              />
+              <feBlend in="SourceGraphic" in2="fiberTint" mode="multiply" result="fiberedPaper" />
+              <feTurbulence type="turbulence" baseFrequency="0.018 0.075" numOctaves="2" seed="29" result="pressedRidges" />
+              <feDisplacementMap in="fiberedPaper" in2="pressedRidges" scale="0.75" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
             <filter id="d-shadow" x="-10%" y="-5%" width="120%" height="115%">
               <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#2d2218" floodOpacity="0.22" />
             </filter>
@@ -92,13 +111,13 @@ export function EnvelopeDemoCss3D() {
 
           <g filter="url(#d-shadow)">
             {/* 1. Body rectangle */}
-            <rect x="0" y="0" width="300" height="400" rx="3" fill="url(#d-paper)" stroke="#b58552" strokeWidth="0.8" strokeOpacity="0.45" />
+            <rect x="0" y="0" width="300" height="400" rx="3" fill="url(#d-paper)" filter="url(#d-paper-surface)" stroke="#b58552" strokeWidth="0.8" strokeOpacity="0.45" />
             {/* 2. Left triangle */}
-            <polygon points="0,0 0,400 92,200" fill="url(#d-paper)" stroke="#b58552" strokeWidth="0.6" strokeOpacity="0.5" />
+            <polygon points="0,0 0,400 92,200" fill="url(#d-paper)" filter="url(#d-paper-surface)" stroke="#b58552" strokeWidth="0.6" strokeOpacity="0.5" />
             {/* 3. Right triangle */}
-            <polygon points="300,0 300,400 208,200" fill="url(#d-paper)" stroke="#b58552" strokeWidth="0.6" strokeOpacity="0.5" />
+            <polygon points="300,0 300,400 208,200" fill="url(#d-paper)" filter="url(#d-paper-surface)" stroke="#b58552" strokeWidth="0.6" strokeOpacity="0.5" />
             {/* 4. Bottom trapezoid */}
-            <polygon points="92,200 208,200 300,400 0,400" fill="url(#d-paper-warm)" stroke="#b58552" strokeWidth="0.6" strokeOpacity="0.55" />
+            <polygon points="92,200 208,200 300,400 0,400" fill="url(#d-paper-warm)" filter="url(#d-paper-surface)" stroke="#b58552" strokeWidth="0.6" strokeOpacity="0.55" />
           </g>
         </svg>
 
@@ -109,7 +128,15 @@ export function EnvelopeDemoCss3D() {
           ref={topFlapRef}
           className="pointer-events-none absolute inset-0 z-30"
           style={{
-            background: "linear-gradient(to bottom, #fefcf6, #f4e7d0)",
+            backgroundColor: "#e7d7bb",
+            backgroundImage: [
+              "linear-gradient(180deg, rgba(251,247,237,0.95) 0%, rgba(231,215,187,0.88) 58%, rgba(210,189,153,0.96) 100%)",
+              "repeating-linear-gradient(104deg, rgba(255,255,255,0.24) 0 1px, transparent 1px 7px)",
+              "repeating-linear-gradient(12deg, rgba(121,88,52,0.12) 0 1px, transparent 1px 11px)",
+              "radial-gradient(circle at 22% 28%, rgba(255,255,255,0.30) 0 1px, transparent 2px)",
+              "radial-gradient(circle at 72% 62%, rgba(111,78,44,0.16) 0 1px, transparent 2px)",
+            ].join(", "),
+            backgroundBlendMode: "normal, screen, multiply, screen, multiply",
             // Triangle: top-left, top-right, point at 50%/53% (matches the
             // SVG version's (150, 212) of 300x400 = 50%, 53%)
             clipPath: "polygon(0% 0%, 100% 0%, 50% 53%)",
@@ -117,7 +144,8 @@ export function EnvelopeDemoCss3D() {
             transformStyle: "preserve-3d",
             backfaceVisibility: "visible",
             // subtle inner shadow to show paper depth when rotated open
-            boxShadow: "inset 0 -8px 18px -10px rgba(45,34,24,0.18)",
+            boxShadow:
+              "inset 0 -10px 20px -12px rgba(61,43,24,0.30), inset 0 1px 0 rgba(255,255,255,0.48)",
           }}
         />
 
