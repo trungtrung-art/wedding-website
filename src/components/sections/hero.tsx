@@ -223,15 +223,15 @@ export function Hero() {
         duration: 0.4, ease: "power2.out",
       }, "-=0.25")
 
-      // 5. Photo 1 (LEFT) emerges from inside, fans out left + tilts ccw
+      // 5. Photo 1 (LEFT) emerges from inside, slight tilt ccw, stays close to center
       .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -40, x: -70, rotate: -16, scale: 1,
+        autoAlpha: 1, y: -40, x: -10, rotate: -12, scale: 1,
         duration: 0.32, ease: "power2.out",
       }, "-=0.05")
 
-      // 6. Photo 2 (RIGHT) emerges from inside, fans out right + tilts cw
+      // 6. Photo 2 (RIGHT) emerges from inside, slight tilt cw, stays close to center
       .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -40, x: 70, rotate: 16, scale: 1,
+        autoAlpha: 1, y: -40, x: 10, rotate: 12, scale: 1,
         duration: 0.32, ease: "power2.out",
       }, "-=0.2")
 
@@ -300,14 +300,15 @@ export function Hero() {
         }}
       >
 
-        {/* Two portrait photo sheets — aspect-[3/4] = width:height = 3:4 so
-            height > width (portrait orientation). Fans out symmetrically. */}
+        {/* Two portrait photos placed CLOSE TOGETHER near the center.
+            With left/right-[18%] + w-[32%], inner edges meet at the
+            envelope center (50%) — photos touch / slightly overlap. */}
 
         {/* Photo 1 — LEFT, gallery[0] */}
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[8%] top-[18%] z-40 aspect-[3/4] w-[36%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[18%] top-[20%] z-40 aspect-[3/4] w-[32%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
@@ -322,7 +323,7 @@ export function Hero() {
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[8%] top-[18%] z-40 aspect-[3/4] w-[36%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[18%] top-[20%] z-40 aspect-[3/4] w-[32%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
