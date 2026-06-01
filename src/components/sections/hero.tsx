@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChevronDown, Leaf } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { invitation } from "@/data/invitation";
 import { useT } from "@/lib/i18n-context";
 import { MusicToggle } from "@/components/music-toggle";
@@ -263,29 +263,51 @@ export function Hero() {
 
         <EnvelopeSeal ref={sealRef} />
 
-        {/* Floral sprigs */}
+        {/* Botanical cutouts */}
         <span
           ref={leftSprigRef}
           style={{ opacity: 0 }}
-          className="pointer-events-none absolute -left-6 bottom-[28%] z-50 h-16 w-16 text-bronze-500/85"
+          className="pointer-events-none absolute left-[-13%] bottom-[20%] z-[41] h-96 w-60 sm:left-[-12%] sm:h-[28rem] sm:w-72 md:left-[-12%] md:bottom-[19%] md:h-[32rem] md:w-80"
           aria-hidden
         >
-          <Leaf
-            className="h-full w-full"
-            strokeWidth={1.1}
-            style={{ transform: "rotate(-30deg)" }}
+          <Image
+            src="/wedding-assets/pampas-grass.png"
+            alt=""
+            width={512}
+            height={768}
+            className="absolute bottom-0 left-0 h-full w-[92%] object-contain"
+            style={{ transform: "rotate(-12deg)" }}
+          />
+          <Image
+            src="/wedding-assets/white-roses.png"
+            alt=""
+            width={512}
+            height={768}
+            className="absolute bottom-1 left-[14%] h-[62%] w-[90%] object-contain"
+            style={{ transform: "rotate(-7deg)" }}
           />
         </span>
         <span
           ref={rightSprigRef}
           style={{ opacity: 0 }}
-          className="pointer-events-none absolute -right-6 bottom-[28%] z-50 h-16 w-16 text-bronze-500/85"
+          className="pointer-events-none absolute right-[-15%] bottom-[11%] z-[43] h-96 w-60 sm:right-[-15%] sm:h-[28rem] sm:w-72 md:right-[-16%] md:bottom-[10%] md:h-[32rem] md:w-80"
           aria-hidden
         >
-          <Leaf
-            className="h-full w-full"
-            strokeWidth={1.1}
-            style={{ transform: "rotate(30deg) scaleX(-1)" }}
+          <Image
+            src="/wedding-assets/pampas-grass.png"
+            alt=""
+            width={512}
+            height={768}
+            className="absolute bottom-8 right-0 h-[94%] w-[86%] object-contain"
+            style={{ transform: "rotate(12deg) scaleX(-1)" }}
+          />
+          <Image
+            src="/wedding-assets/white-roses.png"
+            alt=""
+            width={512}
+            height={768}
+            className="absolute bottom-0 right-[14%] h-[68%] w-[96%] object-contain"
+            style={{ transform: "rotate(-4deg)" }}
           />
         </span>
 
