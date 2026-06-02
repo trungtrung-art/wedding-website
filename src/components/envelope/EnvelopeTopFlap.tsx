@@ -16,12 +16,12 @@ export const EnvelopeTopFlap = forwardRef<HTMLDivElement>(
         className="pointer-events-none absolute inset-0 z-40"
         style={{
           backgroundImage: "url('/wedding-assets/kaleidoscope-bordeaux.jpg')",
-          backgroundPosition: "center",
+          backgroundPosition: "center top",
           backgroundSize: "cover",
           clipPath: "polygon(0% 0%, 100% 0%, 50% 56%)",
+          filter: "drop-shadow(0 2px 1px rgba(45, 34, 24, 0.22))",
           transformOrigin: "top center",
-          transformStyle: "preserve-3d",
-          backfaceVisibility: "hidden",
+          willChange: "transform",
         }}
         aria-hidden
       />

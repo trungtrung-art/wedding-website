@@ -18,6 +18,14 @@ const sealSource = readFileSync(
   new URL("../components/envelope/EnvelopeSeal.tsx", import.meta.url),
   "utf8"
 );
+const layoutSource = readFileSync(
+  new URL("../app/layout.tsx", import.meta.url),
+  "utf8"
+);
+const globalsSource = readFileSync(
+  new URL("../app/globals.css", import.meta.url),
+  "utf8"
+);
 
 test("EnvelopeTopFlap is a centered triangle", () => {
   const topFlapPoints = topFlapSource.match(
@@ -30,6 +38,12 @@ test("EnvelopeTopFlap is a centered triangle", () => {
     topFlapPoints.split(", "),
     ["0% 0%", "100% 0%", "50% 56%"]
   );
+});
+
+test("EnvelopeTopFlap hinges from the envelope top edge without being hidden", () => {
+  assert.match(topFlapSource, /transformOrigin:\s*"top center"/);
+  assert.match(topFlapSource, /willChange:\s*"transform"/);
+  assert.doesNotMatch(topFlapSource, /backfaceVisibility|WebkitBackfaceVisibility|transformStyle/);
 });
 
 test("envelope uses the Bordeaux artwork without tinting its true color", () => {
@@ -57,15 +71,37 @@ test("botanical cutouts sit fully above the envelope face", () => {
 });
 
 test("botanical cutouts and save-the-date card are lifted above the envelope rim", () => {
-  assert.match(heroSource, /cardRef\.current,\s*\{\s*autoAlpha:\s*1,\s*y:\s*-285/);
-  assert.match(heroSource, /left-\[-24%\]\s+bottom-\[14%\]/);
-  assert.match(heroSource, /right-\[-25%\]\s+bottom-\[9%\]/);
+  assert.match(heroSource, /const shellAnticipationY = isMobile \? -6 : -14/);
+  assert.match(heroSource, /const shellOpenY = isMobile \? 178 : -14/);
+  assert.match(heroSource, /const cardLift = isMobile \? -175 : -285/);
+  assert.match(heroSource, /const photoLift = isMobile \? -92 : -200/);
+  assert.match(heroSource, /const topFlapOpenScale = isMobile \? -0\.44 : -0\.54/);
+  assert.match(heroSource, /gsap\.set\(topFlapRef\.current,\s*\{\s*scaleY:\s*1,\s*zIndex:\s*40\s*\}/);
+  assert.match(heroSource, /scaleY:\s*topFlapOpenScale/);
+  assert.doesNotMatch(heroSource, /rotateX:\s*topFlapOpen/);
+  assert.match(heroSource, /\.set\(topFlapRef\.current,\s*\{\s*zIndex:\s*12\s*\}\)/);
+  assert.match(heroSource, /left-\[-13%\]\s+bottom-\[12%\]/);
+  assert.match(heroSource, /right-\[-13%\]\s+bottom-\[7%\]/);
+  assert.match(heroSource, /sm:left-\[-23%\]\s+sm:bottom-\[13%\]/);
+  assert.match(heroSource, /sm:right-\[-24%\]\s+sm:bottom-\[9%\]/);
 });
 
 test("hero uses a soft stage veil to stop background names peeking through the envelope", () => {
   assert.match(heroSource, /envelope-stage-veil/);
   assert.match(heroSource, /className="group relative isolate z-10/);
   assert.match(heroSource, /introRef\.current,\s*\{\s*autoAlpha:\s*0\.12,\s*y:\s*-20/);
+});
+
+test("hero couple names use Mea Culpa in the envelope Bordeaux color", () => {
+  assert.match(layoutSource, /Mea_Culpa/);
+  assert.match(layoutSource, /--font-mea-culpa/);
+  assert.match(globalsSource, /--color-envelope-bordeaux:\s*#7f303a/);
+  assert.match(globalsSource, /font-family:\s*var\(--font-mea-culpa\)/);
+  assert.match(globalsSource, /letter-spacing:\s*0/);
+  assert.match(heroSource, /flex w-full flex-col items-center/);
+  assert.match(heroSource, /sm:grid sm:grid-cols-\[max-content_max-content\]/);
+  assert.match(heroSource, /text-\[clamp\(3\.8rem,18vw,5rem\)\]/);
+  assert.match(heroSource, /sm:text-\[clamp\(4\.2rem,9vw,8\.75rem\)\]/);
 });
 
 test("wax seal uses the downloaded PNGTree raster asset", () => {

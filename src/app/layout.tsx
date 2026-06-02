@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Cormorant_Garamond, Inter, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Inter, Mea_Culpa, Playfair_Display } from "next/font/google";
 import { LanguageProvider } from "@/lib/i18n-context";
 import type { Locale } from "@/data/i18n";
 import { GsapRegister } from "@/components/gsap-register";
@@ -17,6 +17,12 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin", "vietnamese"],
   variable: "--font-playfair",
+  display: "swap",
+});
+const meaCulpa = Mea_Culpa({
+  weight: "400",
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-mea-culpa",
   display: "swap",
 });
 const inter = Inter({
@@ -36,7 +42,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale: Locale = cookieLang === "en" ? "en" : "vi";
 
   return (
-    <html lang={locale} className={`${cormorant.variable} ${playfair.variable} ${inter.variable}`}>
+    <html
+      lang={locale}
+      className={`${cormorant.variable} ${playfair.variable} ${meaCulpa.variable} ${inter.variable}`}
+    >
       <body className="font-sans">
         <LanguageProvider initial={locale}>
           <GsapRegister />

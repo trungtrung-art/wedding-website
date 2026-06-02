@@ -44,7 +44,7 @@ export function Hero() {
       });
       gsap.set(introRef.current, { autoAlpha: 0.12, y: -20 });
       gsap.set([sealRef.current], { autoAlpha: 0 });
-      gsap.set(topFlapRef.current, { rotateX: -158 });
+      gsap.set(topFlapRef.current, { scaleY: -0.44, zIndex: 12 });
       setOpened(true);
       return;
     }
@@ -59,7 +59,7 @@ export function Hero() {
     gsap.set(leftSprigRef.current, { autoAlpha: 0, x: 34, y: 24, rotate: -18 });
     gsap.set(rightSprigRef.current, { autoAlpha: 0, x: -34, y: 24, rotate: 18 });
     gsap.set(hintRef.current, { autoAlpha: 0, y: 18 });
-    gsap.set(topFlapRef.current, { rotateX: 0 });
+    gsap.set(topFlapRef.current, { scaleY: 1, zIndex: 40 });
   }, []);
 
   // Scroll-driven fade on the envelope as you leave the hero
@@ -87,6 +87,13 @@ export function Hero() {
       return;
     }
 
+    const isMobile = window.matchMedia("(max-width: 639px)").matches;
+    const shellAnticipationY = isMobile ? -6 : -14;
+    const shellOpenY = isMobile ? 178 : -14;
+    const cardLift = isMobile ? -175 : -285;
+    const photoLift = isMobile ? -92 : -200;
+    const topFlapOpenScale = isMobile ? -0.44 : -0.54;
+
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
       onComplete: () => setOpened(true),
@@ -94,7 +101,7 @@ export function Hero() {
 
     tl
       // 1. Envelope rises slightly — anticipation
-      .to(shellRef.current, { y: -14, duration: 0.2 })
+      .to(shellRef.current, { y: shellAnticipationY, duration: 0.2 })
       .to(introRef.current, {
         autoAlpha: 0.12, y: -20, duration: 0.35,
       }, "<")
@@ -103,26 +110,34 @@ export function Hero() {
         scale: 0.55, rotate: 22, autoAlpha: 0,
         duration: 0.28, ease: "back.in(1.6)",
       }, "-=0.08")
-      // 3. Top triangle flap hinges back in real 3D space
+      // 3. Top triangle flap folds upward while its top edge stays attached.
+      // A 2D hinge keeps the opened flap visible without letting it float away
+      // from the envelope body in mobile perspective.
       .to(topFlapRef.current, {
-        rotateX: -158, duration: 0.45, ease: "power3.inOut",
+        scaleY: topFlapOpenScale, duration: 0.45, ease: "power3.inOut",
       }, "-=0.2")
+      .set(topFlapRef.current, { zIndex: 12 })
+      // On mobile the extracted papers need extra vertical room below the
+      // names, so the whole envelope settles lower before the contents rise.
+      .to(shellRef.current, {
+        y: shellOpenY, duration: 0.35, ease: "power2.out",
+      }, "-=0.28")
 
       // 4. SAVE THE DATE card rises out of envelope
       .to(cardRef.current, {
-        autoAlpha: 1, y: -285, rotate: 6,
+        autoAlpha: 1, y: cardLift, rotate: 6,
         duration: 0.45, ease: "power2.out",
       }, "-=0.25")
 
       // 5. Photo 1 (LEFT) — rises so a good portion sits above envelope rim
       .to(sheet1Ref.current, {
-        autoAlpha: 1, y: -200, x: 0, rotate: -8, scale: 1,
+        autoAlpha: 1, y: photoLift, x: 0, rotate: -8, scale: 1,
         duration: 0.4, ease: "power2.out",
       }, "-=0.1")
 
       // 6. Photo 2 (RIGHT) — rises to match, ~30% overlap with photo 1
       .to(sheet2Ref.current, {
-        autoAlpha: 1, y: -200, x: 0, rotate: 8, scale: 1,
+        autoAlpha: 1, y: photoLift, x: 0, rotate: 8, scale: 1,
         duration: 0.4, ease: "power2.out",
       }, "-=0.28")
 
@@ -138,11 +153,11 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative mx-auto flex min-h-screen max-w-screen-2xl flex-col items-center justify-between gap-8 px-6 py-8 text-center md:py-14"
+      className="relative mx-auto flex min-h-screen max-w-screen-2xl flex-col items-center justify-start gap-8 overflow-hidden px-4 py-8 text-center sm:justify-between sm:px-6 md:py-14"
     >
       {/* Intro: couple names */}
       <div ref={introRef} className="pointer-events-none relative z-0 w-full space-y-4 opacity-60">
-        <p className="text-xs font-medium uppercase tracking-[0.42em] text-burgundy-900/70">
+        <p className="mx-auto max-w-[18rem] text-[0.65rem] font-medium uppercase leading-5 tracking-[0.32em] text-burgundy-900/70 sm:max-w-none sm:text-xs sm:tracking-[0.42em]">
           {t("hero.kicker")}
         </p>
         {/* Stepped layout with a precise meeting point: 2-column grid
@@ -161,14 +176,14 @@ export function Hero() {
             viewport: ~11-char names (Thiện Trung / Quỳnh Trang) at the font
             size need 2 × (chars × ~0.6 × font-size) ≤ viewport - padding.
             Capped at text-[7rem] on 2xl+ screens where it actually fits. */}
-        <div className="grid w-full grid-cols-[max-content_max-content] items-baseline justify-center gap-y-2">
-          <h1 className="couple-name col-start-1 col-end-2 whitespace-nowrap pr-3 text-right text-4xl leading-[0.95] text-burgundy-900 sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
+        <div className="flex w-full flex-col items-center gap-1 sm:grid sm:grid-cols-[max-content_max-content] sm:items-baseline sm:justify-center sm:gap-y-2">
+          <h1 className="couple-name whitespace-nowrap text-center text-[clamp(3.8rem,18vw,5rem)] leading-[0.76] sm:col-start-1 sm:col-end-2 sm:pr-4 sm:text-right sm:text-[clamp(4.2rem,9vw,8.75rem)] sm:leading-[0.72]">
             {invitation.couple.groom.name}
           </h1>
-          <p className="couple-connector col-span-2 col-start-1 text-center text-3xl leading-none text-bronze-500 sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
+          <p className="couple-connector text-center text-3xl leading-none text-bronze-500 sm:col-span-2 sm:col-start-1 sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
             &amp;
           </p>
-          <h2 className="couple-name col-start-2 col-end-3 whitespace-nowrap pl-3 text-left text-4xl leading-[0.95] text-burgundy-900 sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
+          <h2 className="couple-name whitespace-nowrap text-center text-[clamp(3.8rem,18vw,5rem)] leading-[0.76] sm:col-start-2 sm:col-end-3 sm:pl-4 sm:text-left sm:text-[clamp(4.2rem,9vw,8.75rem)] sm:leading-[0.72]">
             {invitation.couple.bride.name}
           </h2>
         </div>
@@ -183,7 +198,7 @@ export function Hero() {
         onClick={open}
         className="group relative isolate z-10 grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
         style={{
-          width: "clamp(440px, 55vw, 720px)",
+          width: "clamp(320px, 55vw, 720px)",
           aspectRatio: "4/3",
           perspective: "2200px",
           perspectiveOrigin: "center top",
@@ -249,15 +264,15 @@ export function Hero() {
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[56%] top-[5%] z-20 flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-[#fffdf8] px-4 pt-6"
+          className="paper-panel pointer-events-none absolute left-[56%] top-[5%] z-20 flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-[#fffdf8] px-3 pt-4 sm:px-4 sm:pt-6"
         >
-          <span className="text-[0.7rem] uppercase tracking-[0.42em] text-burgundy-900/60">
+          <span className="text-[0.6rem] uppercase tracking-[0.34em] text-burgundy-900/60 sm:text-[0.7rem] sm:tracking-[0.42em]">
             {invitation.couple.initials}
           </span>
-          <span className="mt-2 font-serif text-3xl font-light uppercase leading-none text-burgundy-900 md:text-4xl">
+          <span className="mt-2 font-serif text-2xl font-light uppercase leading-none text-burgundy-900 sm:text-3xl md:text-4xl">
             {t("hero.saveTheDateLine1")}
           </span>
-          <span className="mt-1 font-serif text-3xl font-light uppercase leading-none text-burgundy-900 md:text-4xl">
+          <span className="mt-1 font-serif text-2xl font-light uppercase leading-none text-burgundy-900 sm:text-3xl md:text-4xl">
             {t("hero.saveTheDateLine2")}
           </span>
           
@@ -282,7 +297,7 @@ export function Hero() {
         <span
           ref={leftSprigRef}
           style={{ opacity: 0 }}
-          className="botanical-cutout botanical-cutout-left pointer-events-none absolute left-[-24%] bottom-[14%] z-[35] h-[27rem] w-72 sm:left-[-23%] sm:bottom-[13%] sm:h-[32rem] sm:w-96 md:left-[-22%] md:bottom-[14%] md:h-[36rem] md:w-[26rem]"
+          className="botanical-cutout botanical-cutout-left pointer-events-none absolute left-[-13%] bottom-[12%] z-[35] h-64 w-44 sm:left-[-23%] sm:bottom-[13%] sm:h-[32rem] sm:w-96 md:left-[-22%] md:bottom-[14%] md:h-[36rem] md:w-[26rem]"
           aria-hidden
         >
           <Image
@@ -305,7 +320,7 @@ export function Hero() {
         <span
           ref={rightSprigRef}
           style={{ opacity: 0 }}
-          className="botanical-cutout botanical-cutout-right pointer-events-none absolute right-[-25%] bottom-[9%] z-[35] h-[27rem] w-72 sm:right-[-24%] sm:bottom-[9%] sm:h-[32rem] sm:w-96 md:right-[-23%] md:bottom-[10%] md:h-[36rem] md:w-[26rem]"
+          className="botanical-cutout botanical-cutout-right pointer-events-none absolute right-[-13%] bottom-[7%] z-[35] h-64 w-44 sm:right-[-24%] sm:bottom-[9%] sm:h-[32rem] sm:w-96 md:right-[-23%] md:bottom-[10%] md:h-[36rem] md:w-[26rem]"
           aria-hidden
         >
           <Image
@@ -331,7 +346,7 @@ export function Hero() {
         <EnvelopeSeal ref={sealRef} />
 
         {/* Status text */}
-        <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.34em] text-burgundy-900/75">
+        <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-burgundy-900/75 sm:text-xs sm:tracking-[0.34em]">
           {opened ? t("hero.scrollHint") : t("hero.tagline")}
         </span>
       </button>
