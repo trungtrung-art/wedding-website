@@ -3,13 +3,17 @@
 import type { RefObject } from "react";
 
 /**
- * EnvelopeBody — closed-state envelope built from 4 SVG paper pieces.
+ * EnvelopeBody — envelope pocket built from SVG paper pieces.
  *
- * Layering (back → front in SVG paint order):
+ * Layering (back → front when variant="full"):
  *   1. Body rectangle — the full envelope silhouette / paper backing
  *   2. Left triangle  — flap folded inward from the left edge
  *   3. Right triangle — mirror of left
  *   4. Bottom trapezoid — flap folded UP from the bottom edge
+ *
+ * In the hero, the body is rendered twice: variant="back" below the cards
+ * and variant="front" above them. That lets the front flaps mask the lower
+ * portions of photos/cards as they rise from inside the envelope.
  *
  * The top closing flap is rendered separately as an HTML div
  * (see EnvelopeTopFlap) so CSS 3D transforms can hinge it.
@@ -22,12 +26,22 @@ export function EnvelopeBody({
   leftFlapRef,
   rightFlapRef,
   bottomFlapRef,
+  idPrefix = "env",
+  variant = "full",
 }: {
   bodyRef: RefObject<SVGRectElement | null>;
   leftFlapRef: RefObject<SVGPolygonElement | null>;
   rightFlapRef: RefObject<SVGPolygonElement | null>;
   bottomFlapRef: RefObject<SVGPolygonElement | null>;
+  idPrefix?: string;
+  variant?: "back" | "front" | "full";
 }) {
+  const bordeauxPatternId = `${idPrefix}-bordeaux-pattern`;
+  const shadowId = `${idPrefix}-shadow`;
+  const rimShadowId = `${idPrefix}-rim-shadow`;
+  const showBack = variant === "back" || variant === "full";
+  const showFront = variant === "front" || variant === "full";
+
   return (
     <svg
       viewBox="0 0 400 300"
@@ -37,72 +51,23 @@ export function EnvelopeBody({
       aria-hidden
     >
       <defs>
-        <linearGradient id="env-paper" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f8f2e5" />
-          <stop offset="42%" stopColor="#eadfc9" />
-          <stop offset="100%" stopColor="#d8c4a5" />
-        </linearGradient>
-
-        <linearGradient id="env-paper-warm" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f1e3cb" />
-          <stop offset="54%" stopColor="#e2d0b2" />
-          <stop offset="100%" stopColor="#ccb38e" />
-        </linearGradient>
-
-        <linearGradient id="env-paper-cool" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#fbf7ed" />
-          <stop offset="100%" stopColor="#e7d7bb" />
-        </linearGradient>
-
-        <filter
-          id="env-paper-surface"
-          x="-2%"
-          y="-2%"
-          width="104%"
-          height="104%"
-          colorInterpolationFilters="sRGB"
+        <pattern
+          id={bordeauxPatternId}
+          patternUnits="userSpaceOnUse"
+          width="400"
+          height="300"
         >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.045 0.23"
-            numOctaves="4"
-            seed="17"
-            result="fiberNoise"
+          <image
+            href="/wedding-assets/kaleidoscope-bordeaux.jpg"
+            x="0"
+            y="0"
+            width="400"
+            height="300"
+            preserveAspectRatio="xMidYMid slice"
           />
-          <feColorMatrix
-            in="fiberNoise"
-            type="matrix"
-            values="
-              0 0 0 0 0.55
-              0 0 0 0 0.47
-              0 0 0 0 0.34
-              0 0 0 0.18 0
-            "
-            result="fiberTint"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="fiberTint"
-            mode="multiply"
-            result="fiberedPaper"
-          />
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.018 0.075"
-            numOctaves="2"
-            seed="29"
-            result="pressedRidges"
-          />
-          <feDisplacementMap
-            in="fiberedPaper"
-            in2="pressedRidges"
-            scale="0.75"
-            xChannelSelector="R"
-            yChannelSelector="G"
-          />
-        </filter>
+        </pattern>
 
-        <filter id="env-shadow" x="-10%" y="-5%" width="120%" height="115%">
+        <filter id={shadowId} x="-10%" y="-5%" width="120%" height="115%">
           <feDropShadow
             dx="0"
             dy="10"
@@ -111,52 +76,84 @@ export function EnvelopeBody({
             floodOpacity="0.22"
           />
         </filter>
+
+        <filter id={rimShadowId} x="-8%" y="-8%" width="116%" height="116%">
+          <feDropShadow
+            dx="0"
+            dy="2"
+            stdDeviation="2.2"
+            floodColor="#4b3320"
+            floodOpacity="0.26"
+          />
+        </filter>
       </defs>
 
-      <g filter="url(#env-shadow)">
-        <rect
-          ref={bodyRef}
-          x="0"
-          y="0"
-          width="400"
-          height="300"
-          rx="1.5"
-          fill="url(#env-paper-cool)"
-          filter="url(#env-paper-surface)"
-          stroke="#a77a4d"
-          strokeWidth="0.6"
-          strokeOpacity="0.28"
-        />
+      <g filter={`url(#${shadowId})`}>
+        {showBack && (
+          <rect
+            ref={bodyRef}
+            x="0"
+            y="0"
+            width="400"
+            height="300"
+            rx="1.5"
+            fill={`url(#${bordeauxPatternId})`}
+            stroke="#a77a4d"
+            strokeWidth="0.6"
+            strokeOpacity="0.28"
+          />
+        )}
 
-        <polygon
-          ref={leftFlapRef}
-          points="0,0 0,300 130,150"
-          fill="url(#env-paper)"
-          filter="url(#env-paper-surface)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.5"
-        />
+        {showFront && (
+          <>
+            <polygon
+              ref={leftFlapRef}
+              points="0,0 0,300 130,150"
+              fill={`url(#${bordeauxPatternId})`}
+              stroke="#b58552"
+              strokeWidth="0.6"
+              strokeOpacity="0.5"
+            />
 
-        <polygon
-          ref={rightFlapRef}
-          points="400,0 400,300 270,150"
-          fill="url(#env-paper)"
-          filter="url(#env-paper-surface)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.5"
-        />
+            <polygon
+              ref={rightFlapRef}
+              points="400,0 400,300 270,150"
+              fill={`url(#${bordeauxPatternId})`}
+              stroke="#b58552"
+              strokeWidth="0.6"
+              strokeOpacity="0.5"
+            />
 
-        <polygon
-          ref={bottomFlapRef}
-          points="130,150 270,150 400,300 0,300"
-          fill="url(#env-paper-warm)"
-          filter="url(#env-paper-surface)"
-          stroke="#b58552"
-          strokeWidth="0.6"
-          strokeOpacity="0.55"
-        />
+            <polygon
+              ref={bottomFlapRef}
+              points="130,150 270,150 400,300 0,300"
+              fill={`url(#${bordeauxPatternId})`}
+              stroke="#b58552"
+              strokeWidth="0.6"
+              strokeOpacity="0.55"
+            />
+
+            <path
+              d="M0 0 L130 150 L270 150 L400 0"
+              fill="none"
+              stroke="#7b5535"
+              strokeWidth="1.15"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeOpacity="0.34"
+              filter={`url(#${rimShadowId})`}
+            />
+
+            <path
+              d="M130 150 L270 150"
+              fill="none"
+              stroke="#fff6e4"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeOpacity="0.35"
+            />
+          </>
+        )}
       </g>
     </svg>
   );

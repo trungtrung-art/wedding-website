@@ -46,6 +46,23 @@ main.wedding-canvas > section {
   border-radius: 4px;
 }
 
+.envelope-stage-veil {
+  background:
+    radial-gradient(ellipse at 50% 52%, rgba(248, 243, 235, 0.96) 0%, rgba(248, 243, 235, 0.9) 42%, rgba(248, 243, 235, 0.58) 68%, rgba(248, 243, 235, 0) 78%);
+}
+
+.botanical-cutout {
+  filter: drop-shadow(0 18px 18px rgba(45, 34, 24, 0.14));
+}
+
+.botanical-cutout-left {
+  transform-origin: 56% 78%;
+}
+
+.botanical-cutout-right {
+  transform-origin: 44% 78%;
+}
+
 .monogram {
   display: grid;
   place-items: center;

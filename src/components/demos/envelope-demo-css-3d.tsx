@@ -149,7 +149,7 @@ export function EnvelopeDemoCss3D() {
           }}
         />
 
-        {/* T&Q wax seal sits at the meeting point of all flaps */}
+        {/* T&T wax seal sits at the meeting point of all flaps */}
         <span
           ref={sealRef}
           className="pointer-events-none absolute z-40 h-24 w-24 md:h-28 md:w-28"
@@ -157,7 +157,7 @@ export function EnvelopeDemoCss3D() {
           aria-hidden
         >
           <Image
-            src="/wedding-assets/seal-tq.svg"
+            src="/wedding-assets/seal-tt.svg"
             alt=""
             width={400}
             height={400}

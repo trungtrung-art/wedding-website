@@ -42,6 +42,7 @@ export function Hero() {
       gsap.set([sheet1Ref.current, sheet2Ref.current, cardRef.current, leftSprigRef.current, rightSprigRef.current, hintRef.current], {
         autoAlpha: 1, x: 0, y: 0, rotate: 0,
       });
+      gsap.set(introRef.current, { autoAlpha: 0.12, y: -20 });
       gsap.set([sealRef.current], { autoAlpha: 0 });
       gsap.set(topFlapRef.current, { rotateX: -158 });
       setOpened(true);
@@ -55,8 +56,8 @@ export function Hero() {
     gsap.set([sheet1Ref.current, sheet2Ref.current], {
       autoAlpha: 0, y: 240, scale: 0.96, rotate: 0,
     });
-    gsap.set(leftSprigRef.current, { autoAlpha: 0, x: 50, y: 30, rotate: -28 });
-    gsap.set(rightSprigRef.current, { autoAlpha: 0, x: -50, y: 30, rotate: 28 });
+    gsap.set(leftSprigRef.current, { autoAlpha: 0, x: 34, y: 24, rotate: -18 });
+    gsap.set(rightSprigRef.current, { autoAlpha: 0, x: -34, y: 24, rotate: 18 });
     gsap.set(hintRef.current, { autoAlpha: 0, y: 18 });
     gsap.set(topFlapRef.current, { rotateX: 0 });
   }, []);
@@ -94,6 +95,9 @@ export function Hero() {
     tl
       // 1. Envelope rises slightly — anticipation
       .to(shellRef.current, { y: -14, duration: 0.2 })
+      .to(introRef.current, {
+        autoAlpha: 0.12, y: -20, duration: 0.35,
+      }, "<")
       // 2. Wax seal "breaks"
       .to(sealRef.current, {
         scale: 0.55, rotate: 22, autoAlpha: 0,
@@ -106,7 +110,7 @@ export function Hero() {
 
       // 4. SAVE THE DATE card rises out of envelope
       .to(cardRef.current, {
-        autoAlpha: 1, y: -260, rotate: 6,
+        autoAlpha: 1, y: -285, rotate: 6,
         duration: 0.45, ease: "power2.out",
       }, "-=0.25")
 
@@ -137,7 +141,7 @@ export function Hero() {
       className="relative mx-auto flex min-h-screen max-w-screen-2xl flex-col items-center justify-between gap-8 px-6 py-8 text-center md:py-14"
     >
       {/* Intro: couple names */}
-      <div ref={introRef} className="w-full space-y-5">
+      <div ref={introRef} className="pointer-events-none relative z-0 w-full space-y-4 opacity-60">
         <p className="text-xs font-medium uppercase tracking-[0.42em] text-burgundy-900/70">
           {t("hero.kicker")}
         </p>
@@ -177,7 +181,7 @@ export function Hero() {
         aria-label={opened ? t("hero.scrollHint") : t("hero.tagline")}
         aria-expanded={opened}
         onClick={open}
-        className="group relative grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
+        className="group relative isolate z-10 grid place-items-center transition-transform duration-300 ease-out hover:scale-[1.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600/50 focus-visible:ring-offset-4 focus-visible:ring-offset-cream-50"
         style={{
           width: "clamp(440px, 55vw, 720px)",
           aspectRatio: "4/3",
@@ -186,6 +190,10 @@ export function Hero() {
           transformStyle: "preserve-3d",
         }}
       >
+        <span
+          className="envelope-stage-veil pointer-events-none absolute -inset-x-[22%] -inset-y-[16%] z-0"
+          aria-hidden
+        />
 
         {/* Two LARGER portrait photos with photo 2 (RIGHT) overlapping
             photo 1 (LEFT) by ~30% of photo width.
@@ -193,11 +201,23 @@ export function Hero() {
               sheet2 (right-[18%], w-[46%]) → spans 36 – 82%  from left
               overlap = 36–51% = 15% of envelope = 15/46 ≈ 33% of photo */}
 
+        {/* Envelope backing sits behind every paper item. */}
+        <div className="pointer-events-none absolute inset-0 z-10">
+          <EnvelopeBody
+            idPrefix="env-back"
+            variant="back"
+            bodyRef={envBodyRef}
+            leftFlapRef={envLeftFlapRef}
+            rightFlapRef={envRightFlapRef}
+            bottomFlapRef={envBottomFlapRef}
+          />
+        </div>
+
         {/* Photo 1 — LEFT, gallery[0] */}
         <div
           ref={sheet1Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[11%] top-[18%] z-40 aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute left-[11%] top-[18%] z-[22] aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[0]}
@@ -208,12 +228,12 @@ export function Hero() {
           />
         </div>
 
-        {/* Photo 2 — RIGHT, gallery[1] — z-[42] so it sits ON TOP of
+        {/* Photo 2 — RIGHT, gallery[1] — z-[24] so it sits ON TOP of
             sheet1 in the ~30% overlap zone */}
         <div
           ref={sheet2Ref}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute right-[12%] top-[18%] z-[42] aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
+          className="paper-panel pointer-events-none absolute right-[12%] top-[18%] z-[24] aspect-[3/4] w-[46%] origin-bottom overflow-hidden p-1.5"
         >
           <Image
             src={invitation.photos.gallery[1]}
@@ -224,16 +244,12 @@ export function Hero() {
           />
         </div>
 
-        {/* Main SAVE THE DATE card — top layer */}
-        {/* Card sits BEHIND the photos (z-[35] vs z-40/z-[45]) and rises
-            out of the envelope on open (y: -110 in the animation timeline)
-            so the T&Q / SAVE / DATE text ends up ABOVE the photos.
-            The lower portion of the card stays inside the envelope
-            pocket, hidden behind the photo sheets. */}
+        {/* Main SAVE THE DATE card sits between the back and front envelope
+            layers. The front flaps mask its lower portion while it rises. */}
         <div
           ref={cardRef}
           style={{ opacity: 0 }}
-          className="paper-panel pointer-events-none absolute left-[56%] top-[5%] z-[35] flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-cream-50 px-4 pt-6"
+          className="paper-panel pointer-events-none absolute left-[56%] top-[5%] z-20 flex aspect-square w-[64%] -translate-x-1/2 flex-col items-center justify-start bg-[#fffdf8] px-4 pt-6"
         >
           <span className="text-[0.7rem] uppercase tracking-[0.42em] text-burgundy-900/60">
             {invitation.couple.initials}
@@ -247,11 +263,12 @@ export function Hero() {
           
         </div>
 
-        {/* Envelope pocket — 4 stable pieces as flat SVG (body + L/R
-            triangles + bottom trapezoid). These never move; they form
-            the visible envelope from which the card emerges. */}
-        <div className="pointer-events-none absolute inset-0 z-20">
+        {/* Envelope pocket front sits above card/photos, masking their lower
+            edges so they emerge from inside the envelope. */}
+        <div className="pointer-events-none absolute inset-0 z-30">
           <EnvelopeBody
+            idPrefix="env-front"
+            variant="front"
             bodyRef={envBodyRef}
             leftFlapRef={envLeftFlapRef}
             rightFlapRef={envRightFlapRef}
@@ -259,15 +276,13 @@ export function Hero() {
           />
         </div>
 
-        <EnvelopeTopFlap ref={topFlapRef} />
-
-        <EnvelopeSeal ref={sealRef} />
-
-        {/* Botanical cutouts */}
+        {/* Botanical cutouts are fully on top of the envelope face. Keeping
+            them whole avoids the hard vertical slicing that made them look
+            detached from the paper edge. */}
         <span
           ref={leftSprigRef}
           style={{ opacity: 0 }}
-          className="pointer-events-none absolute left-[-13%] bottom-[20%] z-[41] h-96 w-60 sm:left-[-12%] sm:h-[28rem] sm:w-72 md:left-[-12%] md:bottom-[19%] md:h-[32rem] md:w-80"
+          className="botanical-cutout botanical-cutout-left pointer-events-none absolute left-[-24%] bottom-[14%] z-[35] h-[27rem] w-72 sm:left-[-23%] sm:bottom-[13%] sm:h-[32rem] sm:w-96 md:left-[-22%] md:bottom-[14%] md:h-[36rem] md:w-[26rem]"
           aria-hidden
         >
           <Image
@@ -275,22 +290,22 @@ export function Hero() {
             alt=""
             width={512}
             height={768}
-            className="absolute bottom-0 left-0 h-full w-[92%] object-contain"
-            style={{ transform: "rotate(-12deg)" }}
+            className="absolute bottom-[10%] left-0 h-[82%] w-[90%] object-contain"
+            style={{ transform: "rotate(-13deg)" }}
           />
           <Image
             src="/wedding-assets/white-roses.png"
             alt=""
             width={512}
             height={768}
-            className="absolute bottom-1 left-[14%] h-[62%] w-[90%] object-contain"
-            style={{ transform: "rotate(-7deg)" }}
+            className="absolute bottom-0 left-[12%] h-[68%] w-[86%] object-contain"
+            style={{ transform: "rotate(-9deg)" }}
           />
         </span>
         <span
           ref={rightSprigRef}
           style={{ opacity: 0 }}
-          className="pointer-events-none absolute right-[-15%] bottom-[11%] z-[43] h-96 w-60 sm:right-[-15%] sm:h-[28rem] sm:w-72 md:right-[-16%] md:bottom-[10%] md:h-[32rem] md:w-80"
+          className="botanical-cutout botanical-cutout-right pointer-events-none absolute right-[-25%] bottom-[9%] z-[35] h-[27rem] w-72 sm:right-[-24%] sm:bottom-[9%] sm:h-[32rem] sm:w-96 md:right-[-23%] md:bottom-[10%] md:h-[36rem] md:w-[26rem]"
           aria-hidden
         >
           <Image
@@ -298,18 +313,22 @@ export function Hero() {
             alt=""
             width={512}
             height={768}
-            className="absolute bottom-8 right-0 h-[94%] w-[86%] object-contain"
-            style={{ transform: "rotate(12deg) scaleX(-1)" }}
+            className="absolute bottom-[10%] right-0 h-[82%] w-[90%] object-contain"
+            style={{ transform: "rotate(13deg) scaleX(-1)" }}
           />
           <Image
             src="/wedding-assets/white-roses.png"
             alt=""
             width={512}
             height={768}
-            className="absolute bottom-0 right-[14%] h-[68%] w-[96%] object-contain"
-            style={{ transform: "rotate(-4deg)" }}
+            className="absolute bottom-0 right-[12%] h-[68%] w-[86%] object-contain"
+            style={{ transform: "rotate(9deg) scaleX(-1)" }}
           />
         </span>
+
+        <EnvelopeTopFlap ref={topFlapRef} />
+
+        <EnvelopeSeal ref={sealRef} />
 
         {/* Status text */}
         <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.34em] text-burgundy-900/75">
