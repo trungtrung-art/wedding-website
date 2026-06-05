@@ -5,9 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        cream:    { 50: "#f8f3eb", 100: "#e8d9c2" },
-        bronze:   { 500: "#b58552" },
-        burgundy: { 600: "#7a2d2d", 900: "#2d2218" },
+        cream:    { 50: "#efe3dd", 100: "#e6d1ca" },
+        bronze:   { 500: "#c49a5a" },
+        burgundy: { 600: "#6f101b", 900: "#251312" },
       },
       fontFamily: {
         serif:  ["var(--font-playfair)", "Georgia", "serif"],

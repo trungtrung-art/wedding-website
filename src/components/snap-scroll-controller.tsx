@@ -6,6 +6,8 @@
  * stays as a safety net for users who get past the JS guard, but normally
  * the JS owns scrolling:
  *
+ *   - First down gesture on hero opens the envelope, then later gestures
+ *     move section-by-section
  *   - Wheel down / swipe up / ArrowDown / PageDown / Space → next section
  *   - Wheel up / swipe down / ArrowUp / PageUp           → previous section
  *   - Home / End                                          → first / last
@@ -17,6 +19,7 @@
 import { useEffect } from "react";
 
 const COOLDOWN_MS = 900;            // initial lock-out window after navigation
+const HERO_OPEN_COOLDOWN_MS = 1500; // first down gesture opens the envelope
 const INERTIA_EXTENSION_MS = 350;   // each wheel event during cooldown extends
                                     // lock by this much — defeats trackpad
                                     // momentum scroll which keeps firing events
@@ -32,6 +35,11 @@ export function SnapScrollController() {
 
     let currentIndex = 0;
     let lockUntil = 0;
+    let heroEnvelopeTriggered =
+      sections[0]?.dataset.envelopeOpened === "true";
+
+    const isMobileViewport = () =>
+      window.matchMedia("(max-width: 639px)").matches;
 
     const indexFromScroll = () => {
       const viewportH = window.innerHeight;
@@ -49,6 +57,24 @@ export function SnapScrollController() {
       currentIndex = next;
       lockUntil = Date.now() + COOLDOWN_MS;
       sections[next].scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const shouldOpenHeroEnvelope = () => {
+      if (isMobileViewport()) return false;
+      if (currentIndex !== 0) return false;
+      if (heroEnvelopeTriggered) return false;
+      if (sections[0]?.dataset.envelopeOpened === "true") {
+        heroEnvelopeTriggered = true;
+        return false;
+      }
+      return true;
+    };
+
+    const openHeroEnvelope = () => {
+      heroEnvelopeTriggered = true;
+      lockUntil = Date.now() + HERO_OPEN_COOLDOWN_MS;
+      sections[0]?.scrollIntoView({ behavior: "auto", block: "start" });
+      window.dispatchEvent(new CustomEvent("hero:open-envelope"));
     };
 
     const onWheel = (e: WheelEvent) => {
@@ -70,7 +96,13 @@ export function SnapScrollController() {
       }
 
       currentIndex = indexFromScroll(); // re-sync in case user jumped via anchor
-      if (e.deltaY > 0) goTo(currentIndex + 1);
+      if (e.deltaY > 0) {
+        if (shouldOpenHeroEnvelope()) {
+          openHeroEnvelope();
+          return;
+        }
+        goTo(currentIndex + 1);
+      }
       else if (e.deltaY < 0) goTo(currentIndex - 1);
     };
 
@@ -85,6 +117,10 @@ export function SnapScrollController() {
 
       if (["ArrowDown", "PageDown", " ", "Space"].includes(e.key)) {
         e.preventDefault();
+        if (shouldOpenHeroEnvelope()) {
+          openHeroEnvelope();
+          return;
+        }
         goTo(currentIndex + 1);
       } else if (["ArrowUp", "PageUp"].includes(e.key)) {
         e.preventDefault();
@@ -103,6 +139,20 @@ export function SnapScrollController() {
       if (e.touches.length !== 1) return;
       touchStartY = e.touches[0].clientY;
     };
+    const onTouchMove = (e: TouchEvent) => {
+      if (isMobileViewport()) return;
+      if (touchStartY === null) return;
+      if (e.touches.length !== 1) return;
+      const dy = touchStartY - e.touches[0].clientY;
+      if (dy <= TOUCH_THRESHOLD_PX) return;
+
+      currentIndex = indexFromScroll();
+      if (!shouldOpenHeroEnvelope()) return;
+
+      e.preventDefault();
+      touchStartY = null;
+      openHeroEnvelope();
+    };
     const onTouchEnd = (e: TouchEvent) => {
       if (touchStartY === null) return;
       if (Date.now() < lockUntil) {
@@ -113,7 +163,13 @@ export function SnapScrollController() {
       touchStartY = null;
       if (Math.abs(dy) < TOUCH_THRESHOLD_PX) return;
       currentIndex = indexFromScroll();
-      if (dy > 0) goTo(currentIndex + 1);
+      if (dy > 0) {
+        if (shouldOpenHeroEnvelope()) {
+          openHeroEnvelope();
+          return;
+        }
+        goTo(currentIndex + 1);
+      }
       else goTo(currentIndex - 1);
     };
 
@@ -126,6 +182,7 @@ export function SnapScrollController() {
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("keydown", onKey);
     window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
     window.addEventListener("scrollend", onScrollEnd);
 
@@ -136,6 +193,7 @@ export function SnapScrollController() {
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("scrollend", onScrollEnd);
     };

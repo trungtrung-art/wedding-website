@@ -11,8 +11,10 @@ export function Calendar() {
   const ref = useRef<HTMLDivElement>(null);
   useScrollReveal(ref, { childSelector: "[data-cell]", stagger: 0.02, from: { autoAlpha: 0, scale: 0.6 }, to: { autoAlpha: 1, scale: 1, duration: 0.45, ease: "back.out(1.4)" } });
 
-  const ceremonyDay = Number(invitation.ceremony.solarDate.split("-")[2]);
-  const daysInMonth = 31;
+  const [ceremonyYear, ceremonyMonth, ceremonyDay] = invitation.ceremony.solarDate
+    .split("-")
+    .map(Number);
+  const daysInMonth = new Date(ceremonyYear, ceremonyMonth, 0).getDate();
 
   return (
     <section ref={ref} className="relative mx-auto grid min-h-screen max-w-5xl place-items-center px-5 py-20 text-center">

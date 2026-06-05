@@ -39,6 +39,7 @@ export function EnvelopeBody({
   const bordeauxPatternId = `${idPrefix}-bordeaux-pattern`;
   const shadowId = `${idPrefix}-shadow`;
   const rimShadowId = `${idPrefix}-rim-shadow`;
+  const clipId = `${idPrefix}-rounded-clip`;
   const showBack = variant === "back" || variant === "full";
   const showFront = variant === "front" || variant === "full";
 
@@ -86,74 +87,81 @@ export function EnvelopeBody({
             floodOpacity="0.26"
           />
         </filter>
+
+        <clipPath id={clipId}>
+          <rect x="0" y="0" width="400" height="300" rx="5" ry="5" />
+        </clipPath>
       </defs>
 
       <g filter={`url(#${shadowId})`}>
-        {showBack && (
-          <rect
-            ref={bodyRef}
-            x="0"
-            y="0"
-            width="400"
-            height="300"
-            rx="1.5"
-            fill={`url(#${bordeauxPatternId})`}
-            stroke="#a77a4d"
-            strokeWidth="0.6"
-            strokeOpacity="0.28"
-          />
-        )}
-
-        {showFront && (
-          <>
-            <polygon
-              ref={leftFlapRef}
-              points="0,0 0,300 130,150"
+        <g clipPath={`url(#${clipId})`}>
+          {showBack && (
+            <rect
+              ref={bodyRef}
+              x="0"
+              y="0"
+              width="400"
+              height="300"
+              rx="5"
+              ry="5"
               fill={`url(#${bordeauxPatternId})`}
-              stroke="#b58552"
+              stroke="#a77a4d"
               strokeWidth="0.6"
-              strokeOpacity="0.5"
+              strokeOpacity="0.28"
             />
+          )}
 
-            <polygon
-              ref={rightFlapRef}
-              points="400,0 400,300 270,150"
-              fill={`url(#${bordeauxPatternId})`}
-              stroke="#b58552"
-              strokeWidth="0.6"
-              strokeOpacity="0.5"
-            />
+          {showFront && (
+            <>
+              <polygon
+                ref={leftFlapRef}
+                points="0,0 0,300 130,150"
+                fill={`url(#${bordeauxPatternId})`}
+                stroke="#b58552"
+                strokeWidth="0.6"
+                strokeOpacity="0.5"
+              />
 
-            <polygon
-              ref={bottomFlapRef}
-              points="130,150 270,150 400,300 0,300"
-              fill={`url(#${bordeauxPatternId})`}
-              stroke="#b58552"
-              strokeWidth="0.6"
-              strokeOpacity="0.55"
-            />
+              <polygon
+                ref={rightFlapRef}
+                points="400,0 400,300 270,150"
+                fill={`url(#${bordeauxPatternId})`}
+                stroke="#b58552"
+                strokeWidth="0.6"
+                strokeOpacity="0.5"
+              />
 
-            <path
-              d="M0 0 L130 150 L270 150 L400 0"
-              fill="none"
-              stroke="#7b5535"
-              strokeWidth="1.15"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity="0.34"
-              filter={`url(#${rimShadowId})`}
-            />
+              <polygon
+                ref={bottomFlapRef}
+                points="130,150 270,150 400,300 0,300"
+                fill={`url(#${bordeauxPatternId})`}
+                stroke="#b58552"
+                strokeWidth="0.6"
+                strokeOpacity="0.55"
+              />
 
-            <path
-              d="M130 150 L270 150"
-              fill="none"
-              stroke="#fff6e4"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeOpacity="0.35"
-            />
-          </>
-        )}
+              <path
+                d="M0 0 L130 150 L270 150 L400 0"
+                fill="none"
+                stroke="#7b5535"
+                strokeWidth="1.15"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity="0.34"
+                filter={`url(#${rimShadowId})`}
+              />
+
+              <path
+                d="M130 150 L270 150"
+                fill="none"
+                stroke="#fff6e4"
+                strokeWidth="1"
+                strokeLinecap="round"
+                strokeOpacity="0.35"
+              />
+            </>
+          )}
+        </g>
       </g>
     </svg>
   );

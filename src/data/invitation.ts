@@ -9,7 +9,7 @@ export type Invitation = {
     initials: string;
   };
   ceremony: {
-    solarDate: string; // ISO "2027-05-22"
+    solarDate: string; // ISO "2026-11-08"
     lunarDate: string; // "Thứ bảy, 02/04 Âm lịch"
     time: string;      // "12:00"
     venue: { name: string; address: string; mapUrl: string };
@@ -31,8 +31,8 @@ export const invitation: Invitation = {
     initials: "T&T",
   },
   ceremony: {
-    solarDate: "2026-11-8",
-    lunarDate: "Thứ bảy, 02/04 Âm lịch năm Đinh Mùi",
+    solarDate: "2026-11-08",
+    lunarDate: "Chủ nhật, 30/9 Âm lịch năm Bính Ngọ",
     time: "12:00",
     venue: {
       name: "Trung tâm tiệc cưới Cinelove",
@@ -40,7 +40,7 @@ export const invitation: Invitation = {
       mapUrl: "https://maps.google.com/?q=Cinelove+wedding",
     },
   },
-  rsvp: { deadline: "2027-05-01" },
+  rsvp: { deadline: "2026-10-25" },
   // Placeholder SVGs ship with the repo so every image slot is visible during
   // layout/design work. Swap each URL for a real photo when ready (the future
   // CMS will fill these in per invitation).

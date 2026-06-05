@@ -57,10 +57,10 @@ test("envelope uses the Bordeaux artwork without tinting its true color", () => 
 
 test("envelope body can split into independent back and front z-index layers", () => {
   assert.match(bodySource, /variant\?:\s*"back"\s*\|\s*"front"\s*\|\s*"full"/);
-  assert.match(heroSource, /<EnvelopeBody[\s\S]*variant="back"/);
-  assert.match(heroSource, /<EnvelopeBody[\s\S]*variant="front"/);
-  assert.match(heroSource, /z-10[\s\S]*<EnvelopeBody[\s\S]*variant="back"/);
-  assert.match(heroSource, /z-30[\s\S]*<EnvelopeBody[\s\S]*variant="front"/);
+  assert.match(heroSource, /<EnvelopeBody[\s\S]*variant=['"]back['"]/);
+  assert.match(heroSource, /<EnvelopeBody[\s\S]*variant=['"]front['"]/);
+  assert.match(heroSource, /z-10[\s\S]*<EnvelopeBody[\s\S]*variant=['"]back['"]/);
+  assert.match(heroSource, /z-30[\s\S]*<EnvelopeBody[\s\S]*variant=['"]front['"]/);
 });
 
 test("botanical cutouts sit fully above the envelope face", () => {
@@ -88,7 +88,7 @@ test("botanical cutouts and save-the-date card are lifted above the envelope rim
 
 test("hero uses a soft stage veil to stop background names peeking through the envelope", () => {
   assert.match(heroSource, /envelope-stage-veil/);
-  assert.match(heroSource, /className="group relative isolate z-10/);
+  assert.match(heroSource, /className=['"]group relative isolate z-10/);
   assert.match(heroSource, /introRef\.current,\s*\{\s*autoAlpha:\s*0\.12,\s*y:\s*-20/);
 });
 
