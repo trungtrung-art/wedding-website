@@ -28,6 +28,9 @@ export const dict: Record<Locale, Dict> = {
 		'invitationTitle.stack1': 'LOVE',
 		'invitationTitle.stack2': 'WEDDING',
 		'invitationTitle.stack3': 'FALL IN',
+		'invitationTitle.headline': 'Chúng mình cưới rồi',
+		'invitationTitle.tagline': 'Đã lâu rồi, hẹn gặp ở đám cưới nhé!',
+		'invitationTitle.date': '2026.11.08',
 
 		'welcome.body':
 			'Chúng tôi xin trân trọng kính mời quý vị tới dự buổi lễ thành hôn của chúng tôi. Sự hiện diện của quý vị sẽ là niềm vinh hạnh và là kỷ niệm khó quên trong ngày trọng đại của hai chúng tôi.',
@@ -121,6 +124,9 @@ export const dict: Record<Locale, Dict> = {
 		'invitationTitle.stack1': 'LOVE',
 		'invitationTitle.stack2': 'WEDDING',
 		'invitationTitle.stack3': 'FALL IN',
+		'invitationTitle.headline': 'We got Married',
+		'invitationTitle.tagline': "It's been a long time, see you at the wedding!",
+		'invitationTitle.date': '2026.11.08',
 
 		'welcome.body':
 			'We cordially invite you to share in the joy of our wedding day. Your presence would mean the world to us.',

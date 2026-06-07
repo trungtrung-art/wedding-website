@@ -25,6 +25,7 @@ const INERTIA_EXTENSION_MS = 350;   // each wheel event during cooldown extends
                                     // momentum scroll which keeps firing events
                                     // for 500–1500ms after finger-lift
 const TOUCH_THRESHOLD_PX = 60;      // min vertical swipe distance to trigger nav
+const SECTION_SETTLED_PX = 12;      // section must be snapped here before opening
 
 export function SnapScrollController() {
   useEffect(() => {
@@ -33,10 +34,12 @@ export function SnapScrollController() {
     );
     if (sections.length === 0) return;
 
+    const heroIndex = sections.findIndex((section) => section.id === "hero");
+    const heroSection = heroIndex >= 0 ? sections[heroIndex] : null;
+
     let currentIndex = 0;
     let lockUntil = 0;
-    let heroEnvelopeTriggered =
-      sections[0]?.dataset.envelopeOpened === "true";
+    let heroEnvelopeTriggered = heroSection?.dataset.envelopeOpened === "true";
 
     const isMobileViewport = () =>
       window.matchMedia("(max-width: 639px)").matches;
@@ -60,10 +63,14 @@ export function SnapScrollController() {
     };
 
     const shouldOpenHeroEnvelope = () => {
+      if (!heroSection || heroIndex < 0) return false;
       if (isMobileViewport()) return false;
-      if (currentIndex !== 0) return false;
+      if (currentIndex !== heroIndex) return false;
+      if (Math.abs(heroSection.getBoundingClientRect().top) > SECTION_SETTLED_PX) {
+        return false;
+      }
       if (heroEnvelopeTriggered) return false;
-      if (sections[0]?.dataset.envelopeOpened === "true") {
+      if (heroSection.dataset.envelopeOpened === "true") {
         heroEnvelopeTriggered = true;
         return false;
       }
@@ -71,9 +78,10 @@ export function SnapScrollController() {
     };
 
     const openHeroEnvelope = () => {
+      if (!heroSection) return;
       heroEnvelopeTriggered = true;
       lockUntil = Date.now() + HERO_OPEN_COOLDOWN_MS;
-      sections[0]?.scrollIntoView({ behavior: "auto", block: "start" });
+      heroSection.scrollIntoView({ behavior: "auto", block: "start" });
       window.dispatchEvent(new CustomEvent("hero:open-envelope"));
     };
 

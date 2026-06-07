@@ -2,44 +2,45 @@
 // Adding a new key here requires registering a component in section-renderer.tsx.
 
 export type SectionKey =
-  | "hero"
-  | "date-banner"
-  | "names"
-  | "invitation-title"
-  | "welcome-message"
-  | "gratitude-en"
-  | "poetry-1"
-  | "quote-three-things"
-  | "countdown"
-  | "sentiment-1"
-  | "gallery"
-  | "poetry-2"
-  | "date-details"
-  | "calendar"
-  | "closing-sentiment"
-  | "venue"
-  | "rsvp"
-  | "guest-interaction"
-  | "thank-you";
+	| 'invitation-title'
+	| 'hero'
+	| 'date-banner'
+	| 'names'
+	| 'welcome-message'
+	| 'gratitude-en'
+	| 'poetry-1'
+	| 'quote-three-things'
+	| 'countdown'
+	| 'sentiment-1'
+	| 'gallery'
+	| 'poetry-2'
+	| 'date-details'
+	| 'calendar'
+	| 'closing-sentiment'
+	| 'venue'
+	| 'rsvp'
+	| 'guest-interaction'
+	| 'thank-you';
 
 export const sectionOrder: SectionKey[] = [
-  "hero",
-  "date-banner",
-  "names",
-  "invitation-title",
-  "welcome-message",
-  "gratitude-en",
-  "poetry-1",
-  "quote-three-things",
-  "countdown",
-  "sentiment-1",
-  "gallery",
-  "poetry-2",
-  "date-details",
-  "calendar",
-  "closing-sentiment",
-  "venue",
-  "rsvp",
-  "guest-interaction",
-  "thank-you",
+	'invitation-title',
+	'hero',
+	'date-banner',
+	'names',
+
+	'welcome-message',
+	'gratitude-en',
+	'poetry-1',
+	'quote-three-things',
+	'countdown',
+	'sentiment-1',
+	'gallery',
+	'poetry-2',
+	'date-details',
+	'calendar',
+	'closing-sentiment',
+	'venue',
+	'rsvp',
+	'guest-interaction',
+	'thank-you',
 ];

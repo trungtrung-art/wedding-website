@@ -118,7 +118,9 @@ export function Hero() {
 	}, []);
 
 	const floatHearts = useCallback(() => {
-		const hearts = heartRefs.current.filter(Boolean);
+		const hearts = heartRefs.current.filter(
+			(heart): heart is HTMLSpanElement => Boolean(heart),
+		);
 		const isMobile = window.matchMedia('(max-width: 639px)').matches;
 
 		hearts.forEach((heart) => {
@@ -307,6 +309,7 @@ export function Hero() {
 
 	return (
 		<section
+			id='hero'
 			ref={sectionRef}
 			data-envelope-opened={opened}
 			className='relative mx-auto flex min-h-screen max-w-screen-2xl flex-col items-center justify-start gap-8 overflow-hidden px-4 py-8 text-center sm:justify-between sm:px-6 md:py-14'>

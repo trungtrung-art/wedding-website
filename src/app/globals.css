@@ -1,6 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "MJ VIP Daytonica";
+    src: url("/fonts/MJ-VIP-Daytonica.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --color-page: #efe3dd;
     --color-card: #fff7f2;
